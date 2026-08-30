@@ -297,6 +297,19 @@ Full contract and every warning code: [docs/api.md](docs/api.md).
 
 ---
 
+## Deploying
+
+The image is self-contained -- Tesseract included, nothing to install on the
+host. Every push to `main` publishes it to GitHub Container Registry:
+
+```bash
+docker pull ghcr.io/sakibur-16/alexrila_ai:latest
+docker run -d -p 8000:8000 -e API_KEY=<secret> ghcr.io/sakibur-16/alexrila_ai:latest
+```
+
+Full operator guide, configuration table and troubleshooting:
+**[DEPLOY.md](DEPLOY.md)**.
+
 ## Handing this to a backend developer
 
 Everything needed to integrate is generated into `contract/`, so the service
