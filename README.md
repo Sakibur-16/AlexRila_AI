@@ -154,7 +154,7 @@ uvicorn.
 
 ```bash
 docker build -t receipt-ocr .
-docker run --rm -p 8000:8000 --env-file .env receipt-ocr
+docker run --rm -p 8001:8000 --env-file .env receipt-ocr
 ```
 
 The image installs Tesseract, runs as an unprivileged user, bakes in no
@@ -304,7 +304,7 @@ host. Every push to `main` publishes it to GitHub Container Registry:
 
 ```bash
 docker pull ghcr.io/sakibur-16/alexrila_ai:latest
-docker run -d -p 8000:8000 -e API_KEY=<secret> ghcr.io/sakibur-16/alexrila_ai:latest
+docker run -d -p 8001:8000 -e API_KEY=<secret> ghcr.io/sakibur-16/alexrila_ai:latest
 ```
 
 Full operator guide, configuration table and troubleshooting:

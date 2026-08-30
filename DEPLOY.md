@@ -47,7 +47,7 @@ Takes 5–10 minutes the first time (Tesseract + OpenCV); cached afterwards.
 docker run -d \
   --name receipt-ocr \
   --restart unless-stopped \
-  -p 8000:8000 \
+  -p 8001:8000 \
   -e API_KEY="<your-shared-secret>" \
   -e APP_ENV=production \
   -e WEB_CONCURRENCY=1 \
@@ -59,8 +59,8 @@ docker run -d \
 Verify:
 
 ```bash
-curl -fsS localhost:8000/health   # {"status":"ok",...}
-curl -fsS localhost:8000/ready    # must contain "ready":true
+curl -fsS localhost:8001/health   # {"status":"ok",...}
+curl -fsS localhost:8001/ready    # must contain "ready":true
 ```
 
 `/ready` reporting `ocr:tesseract ready:true` is the signal that the engine is
@@ -76,7 +76,7 @@ Everything is environment-driven. The full annotated list is in
 
 | Variable | Default | Notes |
 |---|---|---|
-| `PORT` | `8000` | Injected by Render/Cloud Run/Heroku. Leave unset on those. |
+| `PORT` | `8000` | The port *inside* the container. Injected by Render/Cloud Run/Heroku -- leave unset there. Map the host side with `-p 8001:8000`. |
 | `WEB_CONCURRENCY` | `2` | One worker per ~512 MB. Measured: 68 MB idle, 84 MB under load. |
 | `API_KEY` | *(empty)* | **Set this if the service is reachable from the internet.** Empty disables auth. |
 | `APP_ENV` | `production` | Also blocks the test-fixture OCR provider. |
@@ -95,7 +95,7 @@ like `03/04/2026` and for a bare `$`.
 ## Calling the API
 
 ```bash
-curl -X POST http://localhost:8000/api/v1/receipts/extract \
+curl -X POST http://localhost:8001/api/v1/receipts/extract \
   -H "X-API-Key: <your-shared-secret>" \
   -F "image=@receipt.jpg"
 ```
@@ -177,7 +177,7 @@ masked out of returned OCR text, and only `card_last4` is ever captured.
 
 ```nginx
 location /receipts/ {
-    proxy_pass         http://receipt-ocr:8000/;
+    proxy_pass         http://receipt-ocr:8000/;   # container port, not the host port
     proxy_set_header   X-Request-ID $request_id;
     client_max_body_size 12m;          # above MAX_FILE_SIZE_MB
     proxy_read_timeout 120s;           # OCR can take a few seconds

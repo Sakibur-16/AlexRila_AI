@@ -1,0 +1,111 @@
+# Production compose file for the Receipt Intelligence API.
+#
+#   docker compose -f docker-compose.prod.yml up -d
+#
+# Pulls a published image -- nothing is built on the host, and Tesseract ships
+# inside the image, so the host needs only Docker.
+#
+# Secrets come from the environment, never from this file. Create a `.env`
+# beside it (and keep it out of git):
+#
+#   API_KEY=<generate: python -c "import secrets;print(secrets.token_urlsafe(32))">
+#   IMAGE_TAG=1.0.0
+#   HOST_PORT=8001        # host-side port; 8000 is usually taken by the backend
+#
+# On ECS/Fargate this file is a reference for the task definition rather than
+# something you run directly: the image, env vars, port, health check and
+# resource limits below map one-to-one onto container-definition fields.
+
+services:
+  receipt-ocr:
+    image: hunter016/receipt-ocr:${IMAGE_TAG:-1.0.0}
+
+    # Pin a version in production. `latest` makes a redeploy silently change
+    # behaviour, and rollback impossible to reason about.
+    pull_policy: always
+
+    restart: unless-stopped
+
+    # HOST_PORT:CONTAINER_PORT. The host side defaults to 8001 because 8000 is
+    # commonly already taken by the main backend; the container always listens
+    # on 8000 internally, which never clashes because it has its own network
+    # namespace. Override with HOST_PORT in .env if 8001 is taken too.
+    #
+    # Bound to localhost on the assumption that a reverse proxy or ALB fronts
+    # this service. Drop the "127.0.0.1:" prefix if nothing else terminates
+    # traffic and the service must be reachable directly.
+    ports:
+      - "127.0.0.1:${HOST_PORT:-8001}:8000"
+
+    environment:
+      APP_ENV: production
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      LOG_FORMAT: json
+
+      # Shared secret clients send as X-API-Key. Required from .env: an unset
+      # value disables authentication, which must never happen by accident in
+      # production, so there is deliberately no default here.
+      API_KEY: ${API_KEY:?API_KEY must be set}
+
+      # One worker per ~512 MB of memory. Measured on this image: 68 MB idle,
+      # 84 MB under OCR load, ~200 ms per receipt. Raise together with the
+      # memory limit below, never on its own.
+      WEB_CONCURRENCY: ${WEB_CONCURRENCY:-2}
+
+      OCR_PROVIDER: tesseract
+      OCR_LANGUAGES: ${OCR_LANGUAGES:-eng}
+      OCR_TIMEOUT_SECONDS: "30"
+      MAX_FILE_SIZE_MB: ${MAX_FILE_SIZE_MB:-10}
+
+      # Locale. The highest-leverage settings in the service: without them an
+      # ambiguous date like 03/04/2026 and a bare "$" both return null by
+      # design rather than being guessed. Set to where receipts actually
+      # originate.
+      DEFAULT_COUNTRY: ${DEFAULT_COUNTRY:-US}
+      DATE_ORDER: ${DATE_ORDER:-MDY}
+
+      # Set only if a browser calls this API directly. Empty disables CORS,
+      # which is correct for server-to-server use.
+      CORS_ALLOW_ORIGINS: ${CORS_ALLOW_ORIGINS:-}
+
+      # Privacy. Receipts are PII: persist nothing, keep document text out of
+      # logs, mask card-like sequences before anything leaves the process.
+      ENABLE_RAW_OCR_STORAGE: "false"
+      LOG_DOCUMENT_CONTENT: "false"
+      REDACT_SENSITIVE_TEXT: "true"
+      DEBUG_ERRORS: "false"
+
+    # /health is liveness only and touches no dependency, so a slow OCR engine
+    # can never cause a restart loop. Check /ready from the load balancer
+    # instead: it reports whether the OCR engine is actually usable.
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+    deploy:
+      resources:
+        limits:
+          # OCR is CPU-bound and single-threaded per request. Scale with
+          # replicas and workers, not with threads.
+          cpus: "1.0"
+          memory: 1G
+        reservations:
+          memory: 256M
+
+    # Hardening. The image already runs as an unprivileged user (uid 1001);
+    # these close the remaining gaps.
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      # Tesseract and OpenCV write scratch files; everything else is read-only.
+      - /tmp:size=256m
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

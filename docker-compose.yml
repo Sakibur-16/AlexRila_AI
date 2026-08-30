@@ -10,8 +10,10 @@ services:
       context: .
       dockerfile: Dockerfile
     image: receipt-ocr:local
+    # Host 8001: 8000 is usually already taken by the main backend. The
+    # container still listens on 8000 internally.
     ports:
-      - "8000:8000"
+      - "${HOST_PORT:-8001}:8000"
     environment:
       APP_ENV: development
       LOG_LEVEL: DEBUG
