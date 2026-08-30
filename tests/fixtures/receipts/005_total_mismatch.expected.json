@@ -1,0 +1,161 @@
+{
+  "confidence": {
+    "extraction": 0.8595833333333333,
+    "fields": {
+      "currency": 0.0,
+      "discount": 0.0,
+      "items": 0.7575000000000001,
+      "merchant.address": 0.0,
+      "merchant.email": 0.0,
+      "merchant.name": 0.7575000000000001,
+      "merchant.phone": 0.0,
+      "merchant.registration_id": 0.0,
+      "merchant.store_id": 0.0,
+      "merchant.tax_id": 0.0,
+      "merchant.website": 0.0,
+      "payment.card_last4": 0.0,
+      "payment.method": 0.0,
+      "receipt_number": 0.0,
+      "service_charge": 0.0,
+      "shipping": 0.0,
+      "subtotal": 0.95,
+      "tax.total": 0.95,
+      "tip": 0.0,
+      "total": 0.5225,
+      "transaction.date": 0.95,
+      "transaction.time": 0.0
+    },
+    "ocr": 0.95,
+    "overall": 0.7781,
+    "validation": 0.4
+  },
+  "currency": null,
+  "currency_symbol": null,
+  "discount": null,
+  "document_type": "receipt",
+  "evidence": {},
+  "items": [
+    {
+      "category": null,
+      "description": "Hammer",
+      "discount": null,
+      "evidence": null,
+      "line_index": 2,
+      "quantity": null,
+      "sku": null,
+      "tax": null,
+      "tax_rate": null,
+      "total_price": "12.00",
+      "unit": null,
+      "unit_price": null
+    },
+    {
+      "category": null,
+      "description": "Nails",
+      "discount": null,
+      "evidence": null,
+      "line_index": 3,
+      "quantity": null,
+      "sku": null,
+      "tax": null,
+      "tax_rate": null,
+      "total_price": "4.50",
+      "unit": null,
+      "unit_price": null
+    }
+  ],
+  "merchant": {
+    "address": null,
+    "country": null,
+    "email": null,
+    "name": "HARDWARE DEPOT",
+    "phone": null,
+    "registration_id": null,
+    "store_id": null,
+    "tax_id": null,
+    "website": null
+  },
+  "notes": null,
+  "payment": {
+    "amount_paid": null,
+    "authorization_code": null,
+    "card_last4": null,
+    "card_type": null,
+    "change": null,
+    "method": null,
+    "splits": []
+  },
+  "raw_ocr": {
+    "line_count": 7,
+    "mean_confidence": 0.95,
+    "redacted": false,
+    "text": "HARDWARE DEPOT\nDate: 2026-08-20\nHammer                   12.00\nNails                     4.50\nSUBTOTAL                 16.50\nTAX                       1.32\nTOTAL                    99.99"
+  },
+  "receipt_number": null,
+  "review": {
+    "reasons": [
+      "LOW_OVERALL_CONFIDENCE",
+      "TOTAL_MISMATCH",
+      "LOW_FIELD_CONFIDENCE:total"
+    ],
+    "review_required": true,
+    "status": "pending"
+  },
+  "rounding_adjustment": null,
+  "schema_version": "1.0",
+  "service_charge": null,
+  "shipping": null,
+  "subtotal": "16.50",
+  "tax": {
+    "details": [
+      {
+        "amount": "1.32",
+        "name": "TAX",
+        "rate": null,
+        "taxable_amount": null
+      }
+    ],
+    "inclusive": null,
+    "total": "1.32"
+  },
+  "tip": null,
+  "total": "99.99",
+  "transaction": {
+    "cashier": null,
+    "date": "2026-08-20",
+    "datetime": null,
+    "raw_date": "2026-08-20",
+    "raw_time": null,
+    "register_id": null,
+    "time": null,
+    "timezone": null,
+    "transaction_id": null
+  },
+  "validation": {
+    "errors": [
+      {
+        "code": "TOTAL_MISMATCH",
+        "context": {
+          "calculated": "17.82",
+          "difference": "82.17",
+          "reported": "99.99",
+          "tolerance": "0.9999"
+        },
+        "field": "total",
+        "message": "Calculated total does not match the total printed on the receipt.",
+        "severity": "error"
+      }
+    ],
+    "infos": [],
+    "is_valid": false,
+    "warnings": [
+      {
+        "code": "MISSING_CURRENCY",
+        "context": {},
+        "field": "currency",
+        "message": "Currency could not be determined.",
+        "severity": "warning"
+      }
+    ]
+  }
+}

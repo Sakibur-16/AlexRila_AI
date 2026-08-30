@@ -1,0 +1,45 @@
+# Development compose file.
+#
+# Mounts the source read-write and enables reload, so this is for local work
+# only -- a production deployment runs the image directly with its own
+# orchestration, secrets and replica count.
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: receipt-ocr:local
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: development
+      LOG_LEVEL: DEBUG
+      LOG_FORMAT: console
+      OCR_PROVIDER: tesseract
+      OCR_LANGUAGES: eng
+      DEBUG_ERRORS: "true"
+      # Nothing sensitive here. Real credentials come from an env_file or the
+      # platform's secret manager, never from this file.
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      # Source is mounted so edits are picked up by --reload. The virtualenv in
+      # /opt/venv is untouched by this mount.
+      - ./app:/app/app:ro
+    command:
+      - uvicorn
+      - app.main:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --reload
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped

@@ -1,0 +1,179 @@
+{
+  "success": true,
+  "data": {
+    "schema_version": "1.0",
+    "document_type": "receipt",
+    "merchant": {
+      "name": "GREEN VALLEY MARKET",
+      "address": "123 Oak Street, Springfield",
+      "phone": "5550142",
+      "email": null,
+      "website": null,
+      "tax_id": null,
+      "registration_id": null,
+      "store_id": null,
+      "country": null
+    },
+    "transaction": {
+      "transaction_id": "R-2026-00815",
+      "date": "2026-08-25",
+      "time": "14:35:00",
+      "datetime": "2026-08-25T14:35:00",
+      "raw_date": "08/25/2026",
+      "raw_time": "14:35",
+      "timezone": null,
+      "cashier": null,
+      "register_id": null
+    },
+    "items": [
+      {
+        "description": "Milk",
+        "sku": null,
+        "quantity": "1",
+        "unit": "L",
+        "unit_price": "2.50",
+        "total_price": "2.50",
+        "discount": null,
+        "tax": null,
+        "tax_rate": null,
+        "category": null,
+        "line_index": 7,
+        "evidence": null
+      },
+      {
+        "description": "Bread Wholemeal",
+        "sku": null,
+        "quantity": null,
+        "unit": null,
+        "unit_price": null,
+        "total_price": "3.00",
+        "discount": null,
+        "tax": null,
+        "tax_rate": null,
+        "category": null,
+        "line_index": 8,
+        "evidence": null
+      },
+      {
+        "description": "Coffee",
+        "sku": null,
+        "quantity": "2",
+        "unit": null,
+        "unit_price": "4.00",
+        "total_price": "8.00",
+        "discount": null,
+        "tax": null,
+        "tax_rate": null,
+        "category": null,
+        "line_index": 9,
+        "evidence": null
+      },
+      {
+        "description": "Apples",
+        "sku": null,
+        "quantity": "1.2",
+        "unit": "KG",
+        "unit_price": "3.00",
+        "total_price": "3.60",
+        "discount": null,
+        "tax": null,
+        "tax_rate": null,
+        "category": null,
+        "line_index": 10,
+        "evidence": null
+      }
+    ],
+    "subtotal": "17.10",
+    "discount": {
+      "description": "DISCOUNT",
+      "amount": "1.10",
+      "rate": null
+    },
+    "tax": {
+      "total": "1.28",
+      "details": [
+        {
+          "name": "SALES TAX",
+          "rate": "8",
+          "amount": "1.28",
+          "taxable_amount": null
+        }
+      ],
+      "inclusive": null
+    },
+    "shipping": null,
+    "service_charge": null,
+    "tip": null,
+    "rounding_adjustment": null,
+    "total": "17.28",
+    "currency": "USD",
+    "currency_symbol": "$",
+    "payment": {
+      "method": "card",
+      "card_type": "VISA",
+      "card_last4": "4321",
+      "authorization_code": "55A2B1",
+      "amount_paid": "20.00",
+      "change": "2.72",
+      "splits": []
+    },
+    "receipt_number": "R-2026-00815",
+    "notes": null,
+    "raw_ocr": {
+      "text": "GREEN VALLEY MARKET\n123 Oak Street, Springfield\nTel: 555-0142\n------------------------------\nReceipt No: R-2026-00815\nDate: 08/25/2026   Time: 14:35\n------------------------------\nMilk 1L                  $2.50\nBread Wholemeal          $3.00\nCoffee x2                $8.00\nApples 1.2KG @ 3.00      $3.60\n------------------------------\nSUBTOTAL                $17.10\nDISCOUNT                 $1.10\nSALES TAX 8%             $1.28\nTOTAL                   $17.28\n------------------------------\nVISA ****4321\nAUTH CODE: 55A2B1\nCASH                    $20.00\nCHANGE                   $2.72\nTHANK YOU FOR SHOPPING",
+      "line_count": 22,
+      "mean_confidence": 0.95,
+      "redacted": false
+    },
+    "confidence": {
+      "overall": 0.9410167597765364,
+      "ocr": 0.95,
+      "extraction": 0.8918328571428571,
+      "validation": 1.0,
+      "fields": {
+        "merchant.name": 0.7575000000000001,
+        "merchant.address": 0.7575000000000001,
+        "merchant.phone": 0.9335000000000001,
+        "merchant.email": 0.0,
+        "merchant.website": 0.0,
+        "merchant.tax_id": 0.0,
+        "merchant.registration_id": 0.0,
+        "transaction.date": 0.95,
+        "transaction.time": 0.95,
+        "receipt_number": 0.95,
+        "subtotal": 1.0,
+        "total": 1.0,
+        "tax.total": 1.0,
+        "discount": 1.0,
+        "service_charge": 0.0,
+        "shipping": 0.0,
+        "tip": 0.0,
+        "currency": 0.91425,
+        "payment.method": 0.95,
+        "payment.card_last4": 0.9335000000000001,
+        "items": 0.9606600000000002
+      }
+    },
+    "validation": {
+      "is_valid": true,
+      "warnings": [],
+      "errors": [],
+      "infos": []
+    },
+    "review": {
+      "review_required": false,
+      "status": "not_required",
+      "reasons": []
+    },
+    "evidence": {}
+  },
+  "warnings": [],
+  "errors": [],
+  "processing": {
+    "request_id": "3f9a2c18-0b7e-4d5a-9c31-2e6f8b4a1d07",
+    "api_version": "v1",
+    "pipeline_version": "1.0.0",
+    "schema_version": "1.0",
+    "processing_time_ms": 812.4
+  }
+}

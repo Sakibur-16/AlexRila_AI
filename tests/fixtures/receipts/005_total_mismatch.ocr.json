@@ -1,0 +1,80 @@
+{
+  "lines": [
+    {
+      "text": "HARDWARE DEPOT",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        40,
+        194,
+        66
+      ]
+    },
+    {
+      "text": "Date: 2026-08-20",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        74,
+        216,
+        100
+      ]
+    },
+    {
+      "text": "Hammer                   12.00",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        108,
+        370,
+        134
+      ]
+    },
+    {
+      "text": "Nails                     4.50",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        142,
+        370,
+        168
+      ]
+    },
+    {
+      "text": "SUBTOTAL                 16.50",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        176,
+        370,
+        202
+      ]
+    },
+    {
+      "text": "TAX                       1.32",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        210,
+        370,
+        236
+      ]
+    },
+    {
+      "text": "TOTAL                    99.99",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        244,
+        370,
+        270
+      ]
+    }
+  ],
+  "languages": [
+    "eng"
+  ],
+  "width": 760,
+  "height": 318,
+  "source": "synthetic"
+}

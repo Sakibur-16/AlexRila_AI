@@ -1,0 +1,73 @@
+# Render blueprint (https://render.com/docs/blueprint-spec)
+#
+# Render reads this file when you create a Blueprint from the repository, or
+# you can ignore it and configure the same values in the dashboard by hand.
+#
+# The image builds from the Dockerfile in this repo, which installs Tesseract
+# itself -- there is nothing to install on the host.
+
+services:
+  - type: web
+    name: receipt-ocr
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter # free = spins down when idle (~50s cold start); starter = always on
+    region: oregon # frankfurt | singapore | ohio | virginia -- pick the one nearest your users
+    healthCheckPath: /health # liveness only; Render restarts on repeated failure
+    autoDeploy: true # redeploy on push to the tracked branch
+
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      - key: LOG_FORMAT
+        value: json
+
+      # One worker per 512 MB. Measured: ~68 MB idle, ~84 MB under OCR load,
+      # so a single worker leaves ample headroom on the starter plan. Raise
+      # this only together with the instance size.
+      - key: WEB_CONCURRENCY
+        value: "1"
+
+      - key: OCR_PROVIDER
+        value: tesseract
+      - key: OCR_LANGUAGES
+        value: eng
+      - key: OCR_TIMEOUT_SECONDS
+        value: "30"
+
+      - key: MAX_FILE_SIZE_MB
+        value: "10"
+
+      # Privacy defaults. Receipts are PII: store nothing, log no document
+      # content, mask card-like sequences before anything leaves the process.
+      - key: ENABLE_RAW_OCR_STORAGE
+        value: "false"
+      - key: LOG_DOCUMENT_CONTENT
+        value: "false"
+      - key: REDACT_SENSITIVE_TEXT
+        value: "true"
+      - key: DEBUG_ERRORS
+        value: "false"
+
+      # Locale. Setting these is the single highest-leverage configuration in
+      # the service: without them an ambiguous date such as 03/04/2026 and a
+      # bare "$" both come back null by design. Set only what you actually know.
+      - key: DEFAULT_COUNTRY
+        value: US
+      - key: DATE_ORDER
+        value: MDY
+
+      # Allow your frontend's origin to call this service from the browser.
+      # Empty disables CORS entirely (fine for server-to-server calls).
+      - key: CORS_ALLOW_ORIGINS
+        value: ""
+
+      # Shared secret for the X-API-Key header. `sync: false` means Render
+      # prompts for the value in the dashboard and keeps it out of this file
+      # and out of git. Leave it unset only if the service is not public.
+      - key: API_KEY
+        sync: false
+
+      # PORT is injected by Render; the Dockerfile binds to it. Do not set it.

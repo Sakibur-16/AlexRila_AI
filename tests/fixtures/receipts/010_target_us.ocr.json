@@ -1,0 +1,129 @@
+{
+  "text": "TARGET.\nMemphis East - 961-261-5079\n5959 Poplar Ave\nMemphis, Tennessee 38119-3938\nDATE: 03/18/2026 TIME: 10:52:41 PM\nGROCERY\n270030028 MORNIF MEAT BF $3.79\n211180116 NASOYA VEGET BF $4.79\n2 x 284060377 GG OATMILK BF@ $6.98\n$3.49\n284000087 PILLSBURY BF $1.89\n284050333 STARBUCKS BF $4.69\n284050333 SBR BF $8.69\n284060377 SILK TF $2.58\n2 @ $1.25 ea\nRegular Price $1.69\nSUBTOTAL $61.52\nB = TX TAX 6.75080 on $58.13 $3.91\nT = TX TAX 9.75000 on $3.39 $0.34\nTOTAL $65.77\n*5025 VISA CHARGE $65.77\nAID: A000000031010\nAUTH CODE: 035721\nYour [ Target Circle ] earnings are\nin!\nOpen the Target App or visit\nTarget.com/Circle to see your\nbenefits.\nTOTAL SAVINGS THIS TRIP\n$6.88",
+  "lines": [
+    {
+      "text": "TARGET.",
+      "confidence": 0.91
+    },
+    {
+      "text": "Memphis East - 961-261-5079",
+      "confidence": 0.91
+    },
+    {
+      "text": "5959 Poplar Ave",
+      "confidence": 0.91
+    },
+    {
+      "text": "Memphis, Tennessee 38119-3938",
+      "confidence": 0.91
+    },
+    {
+      "text": "DATE: 03/18/2026 TIME: 10:52:41 PM",
+      "confidence": 0.91
+    },
+    {
+      "text": "GROCERY",
+      "confidence": 0.91
+    },
+    {
+      "text": "270030028 MORNIF MEAT BF $3.79",
+      "confidence": 0.91
+    },
+    {
+      "text": "211180116 NASOYA VEGET BF $4.79",
+      "confidence": 0.91
+    },
+    {
+      "text": "2 x 284060377 GG OATMILK BF@ $6.98",
+      "confidence": 0.91
+    },
+    {
+      "text": "$3.49",
+      "confidence": 0.91
+    },
+    {
+      "text": "284000087 PILLSBURY BF $1.89",
+      "confidence": 0.91
+    },
+    {
+      "text": "284050333 STARBUCKS BF $4.69",
+      "confidence": 0.91
+    },
+    {
+      "text": "284050333 SBR BF $8.69",
+      "confidence": 0.91
+    },
+    {
+      "text": "284060377 SILK TF $2.58",
+      "confidence": 0.91
+    },
+    {
+      "text": "2 @ $1.25 ea",
+      "confidence": 0.91
+    },
+    {
+      "text": "Regular Price $1.69",
+      "confidence": 0.91
+    },
+    {
+      "text": "SUBTOTAL $61.52",
+      "confidence": 0.91
+    },
+    {
+      "text": "B = TX TAX 6.75080 on $58.13 $3.91",
+      "confidence": 0.91
+    },
+    {
+      "text": "T = TX TAX 9.75000 on $3.39 $0.34",
+      "confidence": 0.91
+    },
+    {
+      "text": "TOTAL $65.77",
+      "confidence": 0.91
+    },
+    {
+      "text": "*5025 VISA CHARGE $65.77",
+      "confidence": 0.91
+    },
+    {
+      "text": "AID: A000000031010",
+      "confidence": 0.91
+    },
+    {
+      "text": "AUTH CODE: 035721",
+      "confidence": 0.91
+    },
+    {
+      "text": "Your [ Target Circle ] earnings are",
+      "confidence": 0.91
+    },
+    {
+      "text": "in!",
+      "confidence": 0.91
+    },
+    {
+      "text": "Open the Target App or visit",
+      "confidence": 0.91
+    },
+    {
+      "text": "Target.com/Circle to see your",
+      "confidence": 0.91
+    },
+    {
+      "text": "benefits.",
+      "confidence": 0.91
+    },
+    {
+      "text": "TOTAL SAVINGS THIS TRIP",
+      "confidence": 0.91
+    },
+    {
+      "text": "$6.88",
+      "confidence": 0.91
+    }
+  ],
+  "languages": [
+    "eng"
+  ],
+  "source": "recorded-from-tesseract-5.4"
+}

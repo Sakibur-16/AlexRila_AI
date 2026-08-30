@@ -1,0 +1,169 @@
+{
+  "confidence": {
+    "extraction": 0.8862661538461538,
+    "fields": {
+      "currency": 0.0,
+      "discount": 0.0,
+      "items": 0.8814600000000001,
+      "merchant.address": 0.7575000000000001,
+      "merchant.email": 0.0,
+      "merchant.name": 0.7575000000000001,
+      "merchant.phone": 0.0,
+      "merchant.registration_id": 0.0,
+      "merchant.store_id": 0.0,
+      "merchant.tax_id": 0.9335000000000001,
+      "merchant.website": 0.0,
+      "payment.card_last4": 0.9335000000000001,
+      "payment.method": 0.95,
+      "receipt_number": 0.95,
+      "service_charge": 1.0,
+      "shipping": 0.0,
+      "subtotal": 1.0,
+      "tax.total": 1.0,
+      "tip": 0.0,
+      "total": 1.0,
+      "transaction.date": 0.95,
+      "transaction.time": 0.95
+    },
+    "ocr": 0.9500000000000001,
+    "overall": 0.9306217948717947,
+    "validation": 0.85
+  },
+  "currency": null,
+  "currency_symbol": null,
+  "discount": null,
+  "document_type": "receipt",
+  "evidence": {},
+  "items": [
+    {
+      "category": null,
+      "description": "Pasta Primavera",
+      "discount": null,
+      "evidence": null,
+      "line_index": 5,
+      "quantity": null,
+      "sku": null,
+      "tax": null,
+      "tax_rate": null,
+      "total_price": "14.00",
+      "unit": null,
+      "unit_price": null
+    },
+    {
+      "category": null,
+      "description": "Grilled Salmon",
+      "discount": null,
+      "evidence": null,
+      "line_index": 6,
+      "quantity": null,
+      "sku": null,
+      "tax": null,
+      "tax_rate": null,
+      "total_price": "22.50",
+      "unit": null,
+      "unit_price": null
+    },
+    {
+      "category": null,
+      "description": "House Wine",
+      "discount": null,
+      "evidence": null,
+      "line_index": 7,
+      "quantity": "2",
+      "sku": null,
+      "tax": null,
+      "tax_rate": null,
+      "total_price": "12.00",
+      "unit": null,
+      "unit_price": "6.00"
+    }
+  ],
+  "merchant": {
+    "address": "88 Harbour Road",
+    "country": null,
+    "email": null,
+    "name": "THE OLIVE TREE",
+    "phone": null,
+    "registration_id": null,
+    "store_id": null,
+    "tax_id": "20",
+    "website": null
+  },
+  "notes": null,
+  "payment": {
+    "amount_paid": "34.02",
+    "authorization_code": null,
+    "card_last4": "9911",
+    "card_type": "VISA",
+    "change": null,
+    "method": "cash",
+    "splits": [
+      {
+        "amount": "34.02",
+        "card_last4": null,
+        "method": "cash"
+      },
+      {
+        "amount": "30.00",
+        "card_last4": "9911",
+        "method": "card"
+      }
+    ]
+  },
+  "raw_ocr": {
+    "line_count": 17,
+    "mean_confidence": 0.9500000000000001,
+    "redacted": false,
+    "text": "THE OLIVE TREE\n88 Harbour Road\nDate: 25-Aug-2026  Time: 8:45 PM\nCheck No: 3391\n------------------------------\nPasta Primavera          14.00\nGrilled Salmon           22.50\nHouse Wine 2 x 6.00      12.00\n------------------------------\nSUBTOTAL                 48.50\nSERVICE CHARGE           4.85\nVAT 20%                  10.67\nTOTAL                    64.02\n------------------------------\nCASH                     34.02\nVISA ****9911            30.00\nTHANK YOU"
+  },
+  "receipt_number": "3391",
+  "review": {
+    "reasons": [],
+    "review_required": false,
+    "status": "not_required"
+  },
+  "rounding_adjustment": null,
+  "schema_version": "1.0",
+  "service_charge": "4.85",
+  "shipping": null,
+  "subtotal": "48.50",
+  "tax": {
+    "details": [
+      {
+        "amount": "10.67",
+        "name": "VAT",
+        "rate": "20",
+        "taxable_amount": null
+      }
+    ],
+    "inclusive": null,
+    "total": "10.67"
+  },
+  "tip": null,
+  "total": "64.02",
+  "transaction": {
+    "cashier": null,
+    "date": "2026-08-25",
+    "datetime": "2026-08-25T20:45:00",
+    "raw_date": "25-Aug-2026",
+    "raw_time": "8:45 PM",
+    "register_id": null,
+    "time": "20:45:00",
+    "timezone": null,
+    "transaction_id": "3391"
+  },
+  "validation": {
+    "errors": [],
+    "infos": [],
+    "is_valid": true,
+    "warnings": [
+      {
+        "code": "MISSING_CURRENCY",
+        "context": {},
+        "field": "currency",
+        "message": "Currency could not be determined.",
+        "severity": "warning"
+      }
+    ]
+  }
+}

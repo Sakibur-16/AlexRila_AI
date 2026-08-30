@@ -1,0 +1,230 @@
+{
+  "lines": [
+    {
+      "text": "GREEN VALLEY MARKET",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        40,
+        249,
+        66
+      ]
+    },
+    {
+      "text": "123 Oak Street, Springfield",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        74,
+        337,
+        100
+      ]
+    },
+    {
+      "text": "Tel: 555-0142",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        108,
+        183,
+        134
+      ]
+    },
+    {
+      "text": "------------------------------",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        142,
+        370,
+        168
+      ]
+    },
+    {
+      "text": "Receipt No: R-2026-00815",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        176,
+        304,
+        202
+      ]
+    },
+    {
+      "text": "Date: 08/25/2026   Time: 14:35",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        210,
+        370,
+        236
+      ]
+    },
+    {
+      "text": "------------------------------",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        244,
+        370,
+        270
+      ]
+    },
+    {
+      "text": "Milk 1L                  $2.50",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        278,
+        370,
+        304
+      ]
+    },
+    {
+      "text": "Bread Wholemeal          $3.00",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        312,
+        370,
+        338
+      ]
+    },
+    {
+      "text": "Coffee x2                $8.00",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        346,
+        370,
+        372
+      ]
+    },
+    {
+      "text": "Apples 1.2KG @ 3.00      $3.60",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        380,
+        370,
+        406
+      ]
+    },
+    {
+      "text": "------------------------------",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        414,
+        370,
+        440
+      ]
+    },
+    {
+      "text": "SUBTOTAL                $17.10",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        448,
+        370,
+        474
+      ]
+    },
+    {
+      "text": "DISCOUNT                 $1.10",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        482,
+        370,
+        508
+      ]
+    },
+    {
+      "text": "SALES TAX 8%             $1.28",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        516,
+        370,
+        542
+      ]
+    },
+    {
+      "text": "TOTAL                   $17.28",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        550,
+        370,
+        576
+      ]
+    },
+    {
+      "text": "------------------------------",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        584,
+        370,
+        610
+      ]
+    },
+    {
+      "text": "VISA ****4321",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        618,
+        183,
+        644
+      ]
+    },
+    {
+      "text": "AUTH CODE: 55A2B1",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        652,
+        227,
+        678
+      ]
+    },
+    {
+      "text": "CASH                    $20.00",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        686,
+        370,
+        712
+      ]
+    },
+    {
+      "text": "CHANGE                   $2.72",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        720,
+        370,
+        746
+      ]
+    },
+    {
+      "text": "THANK YOU FOR SHOPPING",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        754,
+        282,
+        780
+      ]
+    }
+  ],
+  "languages": [
+    "eng"
+  ],
+  "width": 760,
+  "height": 828,
+  "source": "synthetic"
+}

@@ -1,0 +1,70 @@
+# --- secrets -----------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+secrets/
+
+# --- processed documents -----------------------------------------------------
+# Receipts are PII. Nothing under data/ is committed except sample material
+# that is explicitly synthetic.
+data/input/*
+data/output/*
+!data/**/.gitkeep
+!data/samples/
+
+# --- python ------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib60/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# --- environments ------------------------------------------------------------
+.venv/
+venv/
+ENV/
+env/
+.python-version
+
+# --- tooling -----------------------------------------------------------------
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.tox/
+.nox/
+.hypothesis/
+
+# --- editors -----------------------------------------------------------------
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# --- logs --------------------------------------------------------------------
+*.log
+logs/

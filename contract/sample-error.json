@@ -1,0 +1,20 @@
+{
+  "success": false,
+  "data": null,
+  "warnings": [],
+  "errors": [
+    {
+      "code": "UNSUPPORTED_FILE_TYPE",
+      "message": "File content does not match any supported image format.",
+      "field": null,
+      "details": null
+    }
+  ],
+  "processing": {
+    "request_id": "3f9a2c18-0b7e-4d5a-9c31-2e6f8b4a1d07",
+    "api_version": "v1",
+    "pipeline_version": "1.0.0",
+    "schema_version": "1.0",
+    "processing_time_ms": 3.1
+  }
+}

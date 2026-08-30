@@ -1,0 +1,70 @@
+{
+  "lines": [
+    {
+      "text": "FUEL STOP 24",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        40,
+        172,
+        66
+      ]
+    },
+    {
+      "text": "Date: 2026-08-25",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        74,
+        216,
+        100
+      ]
+    },
+    {
+      "text": "Unleaded 30L             45.00",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        108,
+        370,
+        134
+      ]
+    },
+    {
+      "text": "TOTAL                    45.00",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        142,
+        370,
+        168
+      ]
+    },
+    {
+      "text": "CARD 4111 1111 1111 1111",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        176,
+        304,
+        202
+      ]
+    },
+    {
+      "text": "APPROVAL CODE: 9F3K2A",
+      "confidence": 0.95,
+      "bbox": [
+        40,
+        210,
+        271,
+        236
+      ]
+    }
+  ],
+  "languages": [
+    "eng"
+  ],
+  "width": 760,
+  "height": 284,
+  "source": "synthetic"
+}

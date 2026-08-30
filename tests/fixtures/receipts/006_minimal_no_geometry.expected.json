@@ -1,0 +1,158 @@
+{
+  "confidence": {
+    "extraction": 0.7245666666666667,
+    "fields": {
+      "currency": 0.0,
+      "discount": 0.0,
+      "items": 0.6237,
+      "merchant.address": 0.0,
+      "merchant.email": 0.0,
+      "merchant.name": 0.5775,
+      "merchant.phone": 0.0,
+      "merchant.registration_id": 0.0,
+      "merchant.store_id": 0.0,
+      "merchant.tax_id": 0.0,
+      "merchant.website": 0.0,
+      "payment.card_last4": 0.0,
+      "payment.method": 0.0,
+      "receipt_number": 0.0,
+      "service_charge": 0.0,
+      "shipping": 0.0,
+      "subtotal": 0.0,
+      "tax.total": 0.0,
+      "tip": 0.0,
+      "total": 0.8316000000000001,
+      "transaction.date": 0.0,
+      "transaction.time": 0.0
+    },
+    "ocr": 0.55,
+    "overall": 0.6945400000000002,
+    "validation": 0.85
+  },
+  "currency": null,
+  "currency_symbol": null,
+  "discount": null,
+  "document_type": "receipt",
+  "evidence": {},
+  "items": [
+    {
+      "category": null,
+      "description": "Water",
+      "discount": null,
+      "evidence": null,
+      "line_index": 1,
+      "quantity": null,
+      "sku": null,
+      "tax": null,
+      "tax_rate": null,
+      "total_price": "1.00",
+      "unit": null,
+      "unit_price": null
+    }
+  ],
+  "merchant": {
+    "address": null,
+    "country": null,
+    "email": null,
+    "name": "KIOSK 7",
+    "phone": null,
+    "registration_id": null,
+    "store_id": null,
+    "tax_id": null,
+    "website": null
+  },
+  "notes": null,
+  "payment": {
+    "amount_paid": null,
+    "authorization_code": null,
+    "card_last4": null,
+    "card_type": null,
+    "change": null,
+    "method": null,
+    "splits": []
+  },
+  "raw_ocr": {
+    "line_count": 3,
+    "mean_confidence": 0.55,
+    "redacted": false,
+    "text": "KIOSK 7\nWater                     1.00\nTOTAL                     1.00"
+  },
+  "receipt_number": null,
+  "review": {
+    "reasons": [
+      "LOW_OVERALL_CONFIDENCE",
+      "OCR_LOW_CONFIDENCE",
+      "LOW_FIELD_CONFIDENCE:merchant.name"
+    ],
+    "review_required": true,
+    "status": "pending"
+  },
+  "rounding_adjustment": null,
+  "schema_version": "1.0",
+  "service_charge": null,
+  "shipping": null,
+  "subtotal": null,
+  "tax": {
+    "details": [],
+    "inclusive": null,
+    "total": null
+  },
+  "tip": null,
+  "total": "1.00",
+  "transaction": {
+    "cashier": null,
+    "date": null,
+    "datetime": null,
+    "raw_date": null,
+    "raw_time": null,
+    "register_id": null,
+    "time": null,
+    "timezone": null,
+    "transaction_id": null
+  },
+  "validation": {
+    "errors": [],
+    "infos": [
+      {
+        "code": "OCR_NO_GEOMETRY",
+        "context": {},
+        "field": null,
+        "message": "The OCR provider reported no bounding boxes, so spatial extraction heuristics were unavailable.",
+        "severity": "info"
+      },
+      {
+        "code": "MISSING_SUBTOTAL",
+        "context": {},
+        "field": "subtotal",
+        "message": "No subtotal was printed on the receipt.",
+        "severity": "info"
+      }
+    ],
+    "is_valid": true,
+    "warnings": [
+      {
+        "code": "OCR_LOW_CONFIDENCE",
+        "context": {
+          "mean_confidence": "0.55"
+        },
+        "field": null,
+        "message": "OCR confidence is low; extracted values may be unreliable.",
+        "severity": "warning"
+      },
+      {
+        "code": "MISSING_DATE",
+        "context": {},
+        "field": "transaction.date",
+        "message": "No transaction date could be determined.",
+        "severity": "warning"
+      },
+      {
+        "code": "MISSING_CURRENCY",
+        "context": {},
+        "field": "currency",
+        "message": "Currency could not be determined.",
+        "severity": "warning"
+      }
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "lines": [
+    {
+      "text": "KIOSK 7",
+      "confidence": 0.55
+    },
+    {
+      "text": "Water                     1.00",
+      "confidence": 0.55
+    },
+    {
+      "text": "TOTAL                     1.00",
+      "confidence": 0.55
+    }
+  ],
+  "languages": [
+    "eng"
+  ],
+  "width": 760,
+  "height": 182,
+  "source": "synthetic"
+}

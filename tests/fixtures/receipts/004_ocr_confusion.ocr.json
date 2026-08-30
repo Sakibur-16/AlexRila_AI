@@ -1,0 +1,80 @@
+{
+  "lines": [
+    {
+      "text": "QUICK STOP",
+      "confidence": 0.71,
+      "bbox": [
+        40,
+        40,
+        150,
+        66
+      ]
+    },
+    {
+      "text": "Date: 2026-08-25",
+      "confidence": 0.71,
+      "bbox": [
+        40,
+        74,
+        216,
+        100
+      ]
+    },
+    {
+      "text": "COFFEE                   4.OO",
+      "confidence": 0.71,
+      "bbox": [
+        40,
+        108,
+        359,
+        134
+      ]
+    },
+    {
+      "text": "SODA                     2.5O",
+      "confidence": 0.71,
+      "bbox": [
+        40,
+        142,
+        359,
+        168
+      ]
+    },
+    {
+      "text": "SUBTOTAL                 6.5O",
+      "confidence": 0.71,
+      "bbox": [
+        40,
+        176,
+        359,
+        202
+      ]
+    },
+    {
+      "text": "TAX                      O.52",
+      "confidence": 0.71,
+      "bbox": [
+        40,
+        210,
+        359,
+        236
+      ]
+    },
+    {
+      "text": "TOTAL                    7.O2",
+      "confidence": 0.71,
+      "bbox": [
+        40,
+        244,
+        359,
+        270
+      ]
+    }
+  ],
+  "languages": [
+    "eng"
+  ],
+  "width": 760,
+  "height": 318,
+  "source": "synthetic"
+}

@@ -1,0 +1,256 @@
+{
+  "confidence": {
+    "extraction": 0.8408802308802308,
+    "fields": {
+      "currency": 0.0,
+      "discount": 0.9319999999999999,
+      "items": 0.6796825396825398,
+      "merchant.address": 0.7395,
+      "merchant.email": 0.0,
+      "merchant.name": 0.7395,
+      "merchant.phone": 0.0,
+      "merchant.registration_id": 0.0,
+      "merchant.store_id": 0.0,
+      "merchant.tax_id": 0.0,
+      "merchant.website": 0.0,
+      "payment.card_last4": 0.9155000000000002,
+      "payment.method": 0.9319999999999999,
+      "receipt_number": 0.0,
+      "service_charge": 0.0,
+      "shipping": 0.0,
+      "subtotal": 0.7456,
+      "tax.total": 0.8220000000000001,
+      "tip": 0.0,
+      "total": 0.9319999999999999,
+      "transaction.date": 0.9319999999999999,
+      "transaction.time": 0.9319999999999999
+    },
+    "ocr": 0.91,
+    "overall": 0.8309143277620098,
+    "validation": 0.6
+  },
+  "currency": null,
+  "currency_symbol": "$",
+  "discount": {
+    "amount": "6.88",
+    "description": "SAVINGS",
+    "rate": null
+  },
+  "document_type": "receipt",
+  "evidence": {},
+  "items": [
+    {
+      "category": null,
+      "description": "MORNIF MEAT BF",
+      "discount": null,
+      "evidence": null,
+      "line_index": 6,
+      "quantity": null,
+      "sku": "270030028",
+      "tax": null,
+      "tax_rate": null,
+      "total_price": "3.79",
+      "unit": null,
+      "unit_price": null
+    },
+    {
+      "category": null,
+      "description": "NASOYA VEGET BF",
+      "discount": null,
+      "evidence": null,
+      "line_index": 7,
+      "quantity": null,
+      "sku": "211180116",
+      "tax": null,
+      "tax_rate": null,
+      "total_price": "4.79",
+      "unit": null,
+      "unit_price": null
+    },
+    {
+      "category": null,
+      "description": "GG OATMILK BF",
+      "discount": null,
+      "evidence": null,
+      "line_index": 8,
+      "quantity": "2",
+      "sku": "284060377",
+      "tax": null,
+      "tax_rate": null,
+      "total_price": "6.98",
+      "unit": null,
+      "unit_price": "3.49"
+    },
+    {
+      "category": null,
+      "description": "PILLSBURY BF",
+      "discount": null,
+      "evidence": null,
+      "line_index": 10,
+      "quantity": null,
+      "sku": "284000087",
+      "tax": null,
+      "tax_rate": null,
+      "total_price": "1.89",
+      "unit": null,
+      "unit_price": null
+    },
+    {
+      "category": null,
+      "description": "STARBUCKS BF",
+      "discount": null,
+      "evidence": null,
+      "line_index": 11,
+      "quantity": null,
+      "sku": "284050333",
+      "tax": null,
+      "tax_rate": null,
+      "total_price": "4.69",
+      "unit": null,
+      "unit_price": null
+    },
+    {
+      "category": null,
+      "description": "SBR BF",
+      "discount": null,
+      "evidence": null,
+      "line_index": 12,
+      "quantity": null,
+      "sku": "284050333",
+      "tax": null,
+      "tax_rate": null,
+      "total_price": "8.69",
+      "unit": null,
+      "unit_price": null
+    },
+    {
+      "category": null,
+      "description": "SILK TF",
+      "discount": null,
+      "evidence": null,
+      "line_index": 13,
+      "quantity": null,
+      "sku": "284060377",
+      "tax": null,
+      "tax_rate": null,
+      "total_price": "2.58",
+      "unit": null,
+      "unit_price": null
+    }
+  ],
+  "merchant": {
+    "address": "5959 Poplar Ave, Memphis, Tennessee 38119-3938",
+    "country": null,
+    "email": null,
+    "name": "TARGET.",
+    "phone": null,
+    "registration_id": null,
+    "store_id": null,
+    "tax_id": null,
+    "website": null
+  },
+  "notes": null,
+  "payment": {
+    "amount_paid": null,
+    "authorization_code": "035721",
+    "card_last4": "5025",
+    "card_type": "VISA",
+    "change": null,
+    "method": "card",
+    "splits": []
+  },
+  "raw_ocr": {
+    "line_count": 30,
+    "mean_confidence": 0.91,
+    "redacted": false,
+    "text": "TARGET.\nMemphis East - 961-261-5079\n5959 Poplar Ave\nMemphis, Tennessee 38119-3938\nDATE: 03/18/2026 TIME: 10:52:41 PM\nGROCERY\n270030028 MORNIF MEAT BF $3.79\n211180116 NASOYA VEGET BF $4.79\n2 x 284060377 GG OATMILK BF@ $6.98\n$3.49\n284000087 PILLSBURY BF $1.89\n284050333 STARBUCKS BF $4.69\n284050333 SBR BF $8.69\n284060377 SILK TF $2.58\n2 @ $1.25 ea\nRegular Price $1.69\nSUBTOTAL $61.52\nB = TX TAX 6.75080 on $58.13 $3.91\nT = TX TAX 9.75000 on $3.39 $0.34\nTOTAL $65.77\n*5025 VISA CHARGE $65.77\nAID: A000000031010\nAUTH CODE: 035721\nYour [ Target Circle ] earnings are\nin!\nOpen the Target App or visit\nTarget.com/Circle to see your\nbenefits.\nTOTAL SAVINGS THIS TRIP\n$6.88"
+  },
+  "receipt_number": null,
+  "review": {
+    "reasons": [
+      "LOW_OVERALL_CONFIDENCE"
+    ],
+    "review_required": true,
+    "status": "pending"
+  },
+  "rounding_adjustment": null,
+  "schema_version": "1.0",
+  "service_charge": null,
+  "shipping": null,
+  "subtotal": "61.52",
+  "tax": {
+    "details": [
+      {
+        "amount": "3.91",
+        "name": "TAX",
+        "rate": null,
+        "taxable_amount": null
+      },
+      {
+        "amount": "0.34",
+        "name": "TAX",
+        "rate": null,
+        "taxable_amount": null
+      }
+    ],
+    "inclusive": null,
+    "total": "4.25"
+  },
+  "tip": null,
+  "total": "65.77",
+  "transaction": {
+    "cashier": null,
+    "date": "2026-03-18",
+    "datetime": "2026-03-18T22:52:41",
+    "raw_date": "03/18/2026",
+    "raw_time": "10:52:41 PM",
+    "register_id": null,
+    "time": "22:52:41",
+    "timezone": null,
+    "transaction_id": null
+  },
+  "validation": {
+    "errors": [],
+    "infos": [
+      {
+        "code": "OCR_NO_GEOMETRY",
+        "context": {},
+        "field": null,
+        "message": "The OCR provider reported no bounding boxes, so spatial extraction heuristics were unavailable.",
+        "severity": "info"
+      }
+    ],
+    "is_valid": true,
+    "warnings": [
+      {
+        "code": "MISSING_CURRENCY",
+        "context": {
+          "symbol": "$"
+        },
+        "field": "currency",
+        "message": "Currency could not be determined.",
+        "severity": "warning"
+      },
+      {
+        "code": "AMBIGUOUS_CURRENCY",
+        "context": {
+          "raw": "$"
+        },
+        "field": "currency",
+        "message": "The currency symbol is used by several currencies and no context resolved it. The symbol is reported in currency_symbol.",
+        "severity": "warning"
+      },
+      {
+        "code": "ITEM_ARITHMETIC_MISMATCH",
+        "context": {
+          "difference": "28.11",
+          "items_sum": "33.41",
+          "reported": "61.52"
+        },
+        "field": "subtotal",
+        "message": "Sum of line items does not match the subtotal.",
+        "severity": "warning"
+      }
+    ]
+  }
+}
