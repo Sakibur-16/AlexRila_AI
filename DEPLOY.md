@@ -85,6 +85,12 @@ Everything is environment-driven. The full annotated list is in
 | `CORS_ALLOW_ORIGINS` | *(empty)* | Set only if a browser calls the API directly. |
 | `MAX_FILE_SIZE_MB` | `10` | Upload limit. |
 | `OCR_LANGUAGES` | `eng` | Extra languages need their `tesseract-ocr-<lang>` pack in the image. |
+| `OCR_PROVIDER` | `tesseract` | Set `openai_vision` to have a multimodal model read receipts instead. More accurate on photos; receipts then leave your infrastructure. |
+| `VISION_MODEL` | `gpt-4o-mini` | Vision model. Names move -- verify with `python scripts/check_llm.py --list`. |
+| `VISION_API_KEY` | *(empty)* | Required when `OCR_PROVIDER=openai_vision`. |
+| `LLM_MODEL` | `gpt-4o-mini` | Text model for the review endpoints. |
+| `LLM_API_KEY` | *(empty)* | Required for `/api/v1/reviews/*`. |
+| `LLM_BASE_URL` | OpenAI API | Point at any OpenAI-compatible gateway to change vendor. |
 
 `DEFAULT_COUNTRY` and `DATE_ORDER` are the highest-value settings here. Without
 them the pipeline deliberately refuses to guess, and you get `null` for dates
@@ -136,6 +142,27 @@ else:                                            auto_approve()
 means the receipt did not print one.
 
 ---
+
+## Changing the model
+
+Model names change on the provider's schedule. Both defaults are known-good
+rather than newest, and swapping either is a `.env` edit with no rebuild:
+
+```bash
+VISION_MODEL=<newer-model>
+LLM_MODEL=<newer-model>
+```
+
+Confirm a name exists before deploying it:
+
+```bash
+python scripts/check_llm.py --list   # what this key can use
+python scripts/check_llm.py --test   # one real call per configured model
+```
+
+Exit code 1 when a configured model is unavailable, so it can gate a deploy.
+A model that disappears at runtime raises a message naming the model and the
+fix, rather than a bare HTTP 404.
 
 ## Operations
 

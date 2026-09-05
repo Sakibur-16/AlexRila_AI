@@ -102,3 +102,34 @@ def test_env_example_parses_as_a_whole(tmp_path, monkeypatch) -> None:
     assert settings.ocr_languages
     assert settings.allowed_mime_types
     assert settings.max_file_size_mb > 0
+
+
+# ------------------------------------------------------------ model settings
+def test_model_defaults_are_populated() -> None:
+    """ "Ready out of the box": a missing model name is a startup surprise."""
+    settings = Settings(_env_file=None)
+    assert settings.vision_model
+    assert settings.llm_model
+    assert settings.llm_base_url
+
+
+@pytest.mark.parametrize(
+    ("variable", "attribute"),
+    [("VISION_MODEL", "vision_model"), ("LLM_MODEL", "llm_model")],
+)
+def test_model_names_are_overridable_from_env(env, variable: str, attribute: str) -> None:
+    """Model names move; swapping one must never need a code change."""
+    settings = env(**{variable: "some-newer-model-2027"})
+    assert getattr(settings, attribute) == "some-newer-model-2027"
+
+
+def test_base_url_is_overridable_for_another_vendor(env) -> None:
+    """Any OpenAI-compatible gateway should work without touching code."""
+    settings = env(LLM_BASE_URL="https://gateway.internal/v1")
+    assert settings.llm_base_url == "https://gateway.internal/v1"
+
+
+def test_vision_key_is_a_secret(env) -> None:
+    settings = env(VISION_API_KEY="sk-vision-secret")
+    assert "sk-vision-secret" not in repr(settings)
+    assert settings.vision_api_key.get_secret_value() == "sk-vision-secret"

@@ -68,11 +68,14 @@ class Settings(BaseSettings):
     fixture_ocr_dir: str = "tests/fixtures"
 
     # --- vision-model OCR (OCR_PROVIDER=openai_vision) -------------------
-    #: Multimodal model used to transcribe receipts. Model names move faster
-    #: than code does, which is why this is configuration and not a constant.
-    #: Verify the current name with `python scripts/check_llm.py` before a
-    #: deploy; a retired name fails at the first request, not at startup.
-    vision_model: str = "gpt-5.1-mini"
+    #: Multimodal model used to transcribe receipts.
+    #:
+    #: The default is a known-good, vision-capable, low-cost model rather
+    #: than the newest one: model names move faster than code, and a default
+    #: that does not exist fails at the first request rather than at start-up.
+    #: Newer models are a one-line change in .env -- confirm the name first
+    #: with `python scripts/check_llm.py --list`.
+    vision_model: str = "gpt-4o-mini"
     #: Override for an OpenAI-compatible gateway or a self-hosted endpoint.
     #: Empty means the OpenAI API.
     vision_base_url: str = ""
@@ -147,8 +150,13 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------ llm
     llm_enabled: bool = False
     llm_provider: str = "openai_compatible"
-    llm_model: str = ""
-    llm_base_url: str = ""
+    #: Text model for the review endpoints and the extraction fallback.
+    #: Same reasoning as vision_model: a known-good default, overridable in
+    #: .env the moment a better one is confirmed.
+    llm_model: str = "gpt-4o-mini"
+    #: Empty means the OpenAI API. Point this at any OpenAI-compatible
+    #: gateway or self-hosted endpoint to change vendor without code changes.
+    llm_base_url: str = "https://api.openai.com/v1"
     llm_api_key: SecretStr = SecretStr("")
     llm_timeout_seconds: Annotated[float, Field(gt=0, le=300)] = 45.0
     llm_max_retries: Annotated[int, Field(ge=0, le=5)] = 1
