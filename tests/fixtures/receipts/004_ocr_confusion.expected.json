@@ -94,8 +94,7 @@
   "receipt_number": null,
   "review": {
     "reasons": [
-      "LOW_OVERALL_CONFIDENCE",
-      "LOW_FIELD_CONFIDENCE:merchant.name"
+      "LOW_OVERALL_CONFIDENCE"
     ],
     "review_required": true,
     "status": "pending"

@@ -120,7 +120,19 @@ def validate_ocr_quality(ocr: OCRResult | None, settings: Settings) -> list[Vali
     issues: list[ValidationIssue] = []
     mean = ocr.mean_confidence
 
-    if mean and mean < settings.low_ocr_confidence_threshold:
+    if not ocr.has_confidence:
+        # The provider reported no confidence at all (vision models do not).
+        # Reporting that as *low* confidence would flag every such document
+        # for review and render the flag meaningless.
+        issues.append(
+            _issue(
+                IssueCode.OCR_CONFIDENCE_UNAVAILABLE,
+                IssueSeverity.INFO,
+                "The OCR provider reported no confidence scores, so field "
+                "confidence rests on extraction method and validation instead.",
+            )
+        )
+    elif mean and mean < settings.low_ocr_confidence_threshold:
         issues.append(
             _issue(
                 IssueCode.OCR_LOW_CONFIDENCE,

@@ -43,6 +43,9 @@ class IssueCode(enum.StrEnum):
     OCR_SPARSE_TEXT = "OCR_SPARSE_TEXT"
     OCR_SUSPICIOUS_CHARACTERS = "OCR_SUSPICIOUS_CHARACTERS"
     OCR_NO_GEOMETRY = "OCR_NO_GEOMETRY"
+    #: The provider reports no confidence at all. Informational: absence of
+    #: a score is not evidence of a poor read.
+    OCR_CONFIDENCE_UNAVAILABLE = "OCR_CONFIDENCE_UNAVAILABLE"
 
     # --- missing fields --------------------------------------------------
     MISSING_MERCHANT_NAME = "MISSING_MERCHANT_NAME"

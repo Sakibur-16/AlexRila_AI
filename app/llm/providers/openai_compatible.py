@@ -26,6 +26,23 @@ logger = get_logger(__name__)
 _JSON_MEDIA_TYPE = "application/json"
 
 
+#: Newer models take `max_completion_tokens`; older ones only `max_tokens`.
+#: Negotiated on first use rather than kept in a model list that would rot.
+_MODERN_TOKEN_PARAM = "max_completion_tokens"
+_LEGACY_TOKEN_PARAM = "max_tokens"
+
+
+def _rejects_token_parameter(response: Any, parameter: str) -> bool:
+    """Whether the API refused specifically because of the token parameter."""
+    try:
+        error = response.json().get("error", {})
+    except (ValueError, AttributeError):
+        return False
+    if str(error.get("code") or error.get("type") or "") != "unsupported_parameter":
+        return False
+    return parameter in str(error.get("message", ""))
+
+
 def _error_identity(response: Any) -> str:
     """The provider's machine-readable error type/code, or ""."""
     try:
@@ -52,6 +69,7 @@ class OpenAICompatibleProvider(LLMProvider):
     def __init__(self, settings: Settings) -> None:
         self._settings = settings
         self._client: Any = None
+        self._token_parameter = _MODERN_TOKEN_PARAM
 
     # -------------------------------------------------------------- plumbing
     def _http(self) -> Any:
@@ -113,7 +131,9 @@ class OpenAICompatibleProvider(LLMProvider):
         payload = {
             "model": model,
             "temperature": request.temperature,
-            "max_tokens": request.max_output_tokens,
+            # See _MODERN_TOKEN_PARAM: which name this model wants is
+            # discovered on first use, not hardcoded per model.
+            self._token_parameter: request.max_output_tokens,
             # Constrained decoding where the endpoint supports it. Endpoints
             # that ignore it still receive the schema in the system prompt, and
             # the response is validated on return regardless.
@@ -150,6 +170,27 @@ class OpenAICompatibleProvider(LLMProvider):
                 "LLM request failed.",
                 details={"provider": self.name, "error_type": type(exc).__name__},
             ) from exc
+
+        # A model wanting the other token-parameter name says so explicitly.
+        # Switch and retry once; the choice is remembered for later requests.
+        if response.status_code == 400 and _rejects_token_parameter(
+            response, self._token_parameter
+        ):
+            self._token_parameter = (
+                _LEGACY_TOKEN_PARAM
+                if self._token_parameter == _MODERN_TOKEN_PARAM
+                else _MODERN_TOKEN_PARAM
+            )
+            logger.info("llm_token_parameter_switched", parameter=self._token_parameter)
+            payload.pop(_MODERN_TOKEN_PARAM, None)
+            payload.pop(_LEGACY_TOKEN_PARAM, None)
+            payload[self._token_parameter] = request.max_output_tokens
+            response = client.post(
+                "/chat/completions",
+                json=payload,
+                headers=self._auth_headers(),
+                timeout=request.timeout_seconds,
+            )
 
         duration_ms = _now_ms() - started
 

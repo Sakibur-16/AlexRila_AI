@@ -174,7 +174,12 @@ class ReceiptPipeline:
         # --- validate and score -------------------------------------------
         started = time.perf_counter()
         validation = self._validator.validate(extraction, ocr=ocr, quality=quality)
-        scored = self._scorer.score(extraction, validation, ocr_confidence=ocr.mean_confidence)
+        scored = self._scorer.score(
+            extraction,
+            validation,
+            ocr_confidence=ocr.mean_confidence,
+            ocr_confidence_measured=ocr.has_confidence,
+        )
         timer.record("validation", started)
         observe(MetricNames.VALIDATION_LATENCY_MS, timer.timings["validation"])
 
@@ -337,17 +342,28 @@ class ReceiptPipeline:
         outcome = self._llm.run(extraction, ocr.text)
         if not outcome.used:
             validation = self._validator.validate(extraction, ocr=ocr, quality=quality)
-            scored = self._scorer.score(extraction, validation, ocr_confidence=ocr.mean_confidence)
+            scored = self._scorer.score(
+                extraction,
+                validation,
+                ocr_confidence=ocr.mean_confidence,
+                ocr_confidence_measured=ocr.has_confidence,
+            )
             return extraction, validation, scored, outcome
 
         baseline_validation = self._validator.validate(extraction, ocr=ocr, quality=quality)
         baseline_confidence = self._scorer.score(
-            extraction, baseline_validation, ocr_confidence=ocr.mean_confidence
+            extraction,
+            baseline_validation,
+            ocr_confidence=ocr.mean_confidence,
+            ocr_confidence_measured=ocr.has_confidence,
         )
 
         merged_validation = self._validator.validate(outcome.extraction, ocr=ocr, quality=quality)
         merged_confidence = self._scorer.score(
-            outcome.extraction, merged_validation, ocr_confidence=ocr.mean_confidence
+            outcome.extraction,
+            merged_validation,
+            ocr_confidence=ocr.mean_confidence,
+            ocr_confidence_measured=ocr.has_confidence,
         )
 
         if merged_confidence.report.overall < baseline_confidence.report.overall:

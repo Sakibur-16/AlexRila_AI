@@ -81,8 +81,7 @@
   "review": {
     "reasons": [
       "LOW_OVERALL_CONFIDENCE",
-      "OCR_LOW_CONFIDENCE",
-      "LOW_FIELD_CONFIDENCE:merchant.name"
+      "OCR_LOW_CONFIDENCE"
     ],
     "review_required": true,
     "status": "pending"

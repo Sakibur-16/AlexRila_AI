@@ -178,6 +178,21 @@ class OCRResult(BaseModel):
         """Whether spatial reasoning is available for this result."""
         return any(line.bbox is not None for line in self.lines)
 
+    @property
+    def has_confidence(self) -> bool:
+        """Whether the provider reported any per-line confidence.
+
+        Vision models report none: a token probability is not a legible-text
+        probability. Absence of a score is *not* evidence of a poor read, and
+        conflating the two flags every such document for review, which makes
+        the flag worthless. Consumers branch on this rather than treating the
+        neutral fallback in ``effective_confidence`` as a measurement.
+        """
+        return any(
+            line.confidence is not None or any(word.confidence is not None for word in line.words)
+            for line in self.lines
+        )
+
     def line_at(self, index: int) -> OCRLine | None:
         """Return the line at ``index``, or ``None`` if out of range."""
         if 0 <= index < len(self.lines):

@@ -321,3 +321,59 @@ def test_a_429_with_no_parseable_body_is_treated_as_transient(configured, image)
     with pytest.raises(ProviderUnavailableError) as exc:
         _provider(configured, client).extract(OCRRequest(image=image))
     assert exc.value.retryable
+
+
+# ------------------------------------- unknown confidence != low confidence
+def test_absent_confidence_is_not_reported_as_low(configured, image, settings) -> None:
+    """A vision model reports no confidence; that is not evidence of a bad read.
+
+    Treating the neutral fallback as a measurement flagged every vision-OCR
+    receipt with OCR_LOW_CONFIDENCE and pushed it into the review queue,
+    which empties the flag of meaning.
+    """
+    from app.validation.engine import ValidationEngine
+
+    client = _StubClient(_StubResponse(200, _completion(RECEIPT_TEXT)))
+    ocr = _provider(configured, client).extract(OCRRequest(image=image))
+
+    assert not ocr.has_confidence
+
+    from app.extraction.receipt import RuleBasedReceiptExtractor
+
+    extraction = RuleBasedReceiptExtractor(settings).extract(ocr)
+    codes = ValidationEngine(settings).validate(extraction, ocr=ocr).codes()
+
+    assert "OCR_LOW_CONFIDENCE" not in codes
+    assert "OCR_CONFIDENCE_UNAVAILABLE" in codes
+
+
+def test_measured_low_confidence_is_still_reported(settings, ocr_result_factory) -> None:
+    """The real signal must survive the fix."""
+    from app.extraction.receipt import RuleBasedReceiptExtractor
+    from app.validation.engine import ValidationEngine
+
+    ocr = ocr_result_factory(["SHOP", "Milk 2.50", "TOTAL 2.50"], confidence=0.20)
+    assert ocr.has_confidence
+
+    extraction = RuleBasedReceiptExtractor(settings).extract(ocr)
+    assert "OCR_LOW_CONFIDENCE" in ValidationEngine(settings).validate(extraction, ocr=ocr).codes()
+
+
+def test_unmeasured_confidence_does_not_drag_scores_down(settings, ocr_result_factory) -> None:
+    """With no OCR term, scoring rests entirely on method and validation."""
+    from app.confidence.scorer import ConfidenceScorer
+    from app.extraction.receipt import RuleBasedReceiptExtractor
+    from app.validation.engine import ValidationEngine
+
+    lines = ["GREEN VALLEY", "Milk 2.50", "SUBTOTAL 2.50", "TOTAL 2.50"]
+    ocr = ocr_result_factory(lines, confidence=None)
+    extraction = RuleBasedReceiptExtractor(settings).extract(ocr)
+    validation = ValidationEngine(settings).validate(extraction, ocr=ocr)
+
+    scored = ConfidenceScorer(settings).score(
+        extraction, validation, ocr_confidence=0.5, ocr_confidence_measured=False
+    )
+    # The total is keyword-anchored (0.95 prior); an unmeasured OCR term must
+    # not pull it toward the 0.5 placeholder.
+    assert scored.report.fields["total"] > 0.9
+    assert "OCR_LOW_CONFIDENCE" not in scored.review_reasons

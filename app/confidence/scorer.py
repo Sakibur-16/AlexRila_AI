@@ -112,6 +112,7 @@ class ConfidenceScorer:
         validation: ValidationResult,
         *,
         ocr_confidence: float,
+        ocr_confidence_measured: bool = True,
     ) -> ScoredConfidence:
         """Score every field and derive the aggregate.
 
@@ -120,11 +121,18 @@ class ConfidenceScorer:
             validation: Validation outcome, which modulates the scores.
             ocr_confidence: Document-level OCR confidence, used for fields
                 whose evidence carries no per-span confidence.
+            ocr_confidence_measured: False when the provider reports no
+                confidence at all (vision models do not). The OCR term is then
+                dropped and the weights renormalised onto extraction, rather
+                than a neutral placeholder being scored as if it were a
+                measurement -- which would penalise every such document.
 
         Returns:
             The report and whether the result warrants human review.
         """
         weight_ocr, weight_extraction = self._settings.confidence_weights()
+        if not ocr_confidence_measured:
+            weight_ocr, weight_extraction = 0.0, 1.0
         arithmetic_ok = self._arithmetic_reconciled(validation)
         penalised = self._penalty_map(validation)
 
@@ -170,7 +178,9 @@ class ConfidenceScorer:
             fields=field_scores,
         )
 
-        review_required, reasons = self._review_decision(report, validation)
+        review_required, reasons = self._review_decision(
+            report, validation, ocr_confidence_measured
+        )
         return ScoredConfidence(
             report=report, review_required=review_required, review_reasons=reasons
         )
@@ -305,7 +315,10 @@ class ConfidenceScorer:
         return weighted / total_weight
 
     def _review_decision(
-        self, report: ConfidenceReport, validation: ValidationResult
+        self,
+        report: ConfidenceReport,
+        validation: ValidationResult,
+        ocr_confidence_measured: bool = True,
     ) -> tuple[bool, tuple[str, ...]]:
         """Decide whether a human should look at this result.
 
@@ -320,7 +333,9 @@ class ConfidenceScorer:
             reasons.append("LOW_OVERALL_CONFIDENCE")
         if validation.errors:
             reasons.extend(sorted({issue.code.value for issue in validation.errors}))
-        if report.ocr < self._settings.low_ocr_confidence_threshold:
+        # Only a *measured* low score is a reason to review. An unreported
+        # one says nothing about legibility.
+        if ocr_confidence_measured and report.ocr < self._settings.low_ocr_confidence_threshold:
             reasons.append("OCR_LOW_CONFIDENCE")
 
         for path in ("total", "currency", "transaction.date", "merchant.name"):

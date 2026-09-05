@@ -135,11 +135,16 @@ class Settings(BaseSettings):
     confidence_weight_extraction: Annotated[float, Field(ge=0, le=1)] = 0.55
     #: Multiplier applied to affected fields when financial validation fails.
     confidence_validation_penalty: Annotated[float, Field(ge=0, le=1)] = 0.65
-    #: An individual field triggers human review below this score. Deliberately
-    #: lower than CONFIDENCE_THRESHOLD: a field read by a sound heuristic scores
-    #: below the aggregate bar by design, and flagging every such receipt would
-    #: make the review queue meaningless.
-    review_field_confidence_threshold: Annotated[float, Field(ge=0, le=1)] = 0.65
+    #: An individual field triggers human review below this score.
+    #:
+    #: Deliberately set *below* the HEURISTIC method prior (0.60). A field
+    #: found by a sound positional heuristic -- the merchant name, which no
+    #: receipt labels -- scores exactly that prior when the OCR engine
+    #: reports no confidence of its own, as vision models do. At 0.65 every
+    #: such receipt demanded review, which empties the flag of meaning.
+    #: At 0.55 a CONFIGURED value (0.40) still triggers, because that came
+    #: from settings rather than from the document.
+    review_field_confidence_threshold: Annotated[float, Field(ge=0, le=1)] = 0.55
 
     # ----------------------------------------------------------- validation
     #: Absolute tolerance, in major currency units, for arithmetic checks.
