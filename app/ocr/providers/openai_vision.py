@@ -79,6 +79,29 @@ _JPEG_QUALITY = 92
 _MAX_EDGE = 1600
 
 
+def _error_code(response: Any) -> str:
+    """Return the provider's own machine-readable error type, or "".
+
+    A 429 means two very different things. Genuine rate limiting is transient
+    and worth retrying; an exhausted credit balance is a billing problem that
+    will never succeed on retry, and reporting it as "rate limited" sends the
+    reader looking for the wrong fix.
+    """
+    try:
+        error = response.json().get("error", {})
+    except (ValueError, AttributeError):
+        return ""
+    return str(error.get("type") or error.get("code") or "")
+
+
+def _quota_message(response: Any) -> str:
+    """The provider's own billing message, which names the fix precisely."""
+    try:
+        return str(response.json().get("error", {}).get("message", ""))[:300]
+    except (ValueError, AttributeError):
+        return ""
+
+
 def _is_model_error(response: Any) -> bool:
     """Whether a 4xx names the model as the problem.
 
@@ -230,7 +253,13 @@ class OpenAIVisionOCRProvider(OCRProvider):
             ) from exc
 
         if response.status_code == 429:
-            # Rate limiting is transient, so it must map to a retryable error.
+            # Two different failures share this status. Only one is transient.
+            if "quota" in _error_code(response) or "credit" in _error_code(response):
+                raise OCRError(
+                    _quota_message(response) or "The provider account has no remaining credit.",
+                    code=ErrorCode.PROVIDER_QUOTA_EXHAUSTED,
+                    details={"provider": self.name, "status_code": 429},
+                )
             raise ProviderUnavailableError(
                 "Vision model rate limit reached.",
                 details={"provider": self.name, "status_code": 429},

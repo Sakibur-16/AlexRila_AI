@@ -279,3 +279,45 @@ def test_other_400s_are_not_misreported_as_a_model_problem(configured, image) ->
     with pytest.raises(OCRError) as exc:
         _provider(configured, client).extract(OCRRequest(image=image))
     assert "not available to this API key" not in exc.value.message
+
+
+# ------------------------------------------- quota exhaustion vs rate limit
+def test_exhausted_credit_is_not_treated_as_a_rate_limit(configured, image) -> None:
+    """Both arrive as 429, but only one is worth retrying.
+
+    Retrying an empty credit balance can never succeed, and reporting it as
+    "rate limited" sends the reader hunting for a throughput problem instead
+    of a billing page.
+    """
+    body = {
+        "error": {
+            "type": "insufficient_quota",
+            "code": "credit_balance_exhausted",
+            "message": "You have no credits remaining. Add credits to continue.",
+        }
+    }
+    client = _StubClient(_StubResponse(429, body))
+
+    with pytest.raises(OCRError) as exc:
+        _provider(configured, client).extract(OCRRequest(image=image))
+
+    assert exc.value.code is ErrorCode.PROVIDER_QUOTA_EXHAUSTED
+    assert not exc.value.retryable, "retrying an empty balance is pointless"
+    assert "no credits remaining" in exc.value.message.lower()
+
+
+def test_genuine_rate_limiting_is_still_retryable(configured, image) -> None:
+    body = {"error": {"type": "rate_limit_error", "message": "Rate limit reached"}}
+    client = _StubClient(_StubResponse(429, body))
+
+    with pytest.raises(ProviderUnavailableError) as exc:
+        _provider(configured, client).extract(OCRRequest(image=image))
+    assert exc.value.retryable
+
+
+def test_a_429_with_no_parseable_body_is_treated_as_transient(configured, image) -> None:
+    """Absent evidence, assume the recoverable case."""
+    client = _StubClient(_StubResponse(429, None))
+    with pytest.raises(ProviderUnavailableError) as exc:
+        _provider(configured, client).extract(OCRRequest(image=image))
+    assert exc.value.retryable

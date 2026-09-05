@@ -26,6 +26,23 @@ logger = get_logger(__name__)
 _JSON_MEDIA_TYPE = "application/json"
 
 
+def _error_identity(response: Any) -> str:
+    """The provider's machine-readable error type/code, or ""."""
+    try:
+        error = response.json().get("error", {})
+    except (ValueError, AttributeError):
+        return ""
+    return str(error.get("type") or error.get("code") or "")
+
+
+def _error_message(response: Any) -> str:
+    """The provider's own message, which names the fix precisely."""
+    try:
+        return str(response.json().get("error", {}).get("message", ""))[:300]
+    except (ValueError, AttributeError):
+        return ""
+
+
 @register_llm_provider("openai_compatible")
 class OpenAICompatibleProvider(LLMProvider):
     """Structured extraction over an OpenAI-compatible chat endpoint."""
@@ -135,6 +152,23 @@ class OpenAICompatibleProvider(LLMProvider):
             ) from exc
 
         duration_ms = _now_ms() - started
+
+        if response.status_code == 429:
+            # A 429 covers both transient rate limiting and a permanently
+            # exhausted credit balance. Retrying the latter can never succeed,
+            # and calling it "rate limited" points at the wrong fix.
+            error = _error_identity(response)
+            if "quota" in error or "credit" in error:
+                raise LLMError(
+                    _error_message(response) or "The provider account has no remaining credit.",
+                    code=ErrorCode.PROVIDER_QUOTA_EXHAUSTED,
+                    details={"provider": self.name, "status_code": 429},
+                )
+            raise LLMError(
+                "LLM provider rate limit reached.",
+                code=ErrorCode.LLM_TIMEOUT,  # retryable
+                details={"provider": self.name, "status_code": 429},
+            )
 
         if response.status_code >= 400:
             # The body may echo request content; only the status is surfaced.

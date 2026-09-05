@@ -50,6 +50,9 @@ def build_expected(name: str) -> dict[str, Any]:
     from app.validation.engine import ValidationEngine
 
     settings = Settings(
+        # Ignore any local .env: golden output is a contract, and it must not
+        # shift because a developer set DEFAULT_COUNTRY on their machine.
+        _env_file=None,
         app_env="test",
         ocr_provider="fixture",
         fixture_ocr_dir=str(FIXTURE_DIR),

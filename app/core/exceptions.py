@@ -44,6 +44,9 @@ class ErrorCode(enum.StrEnum):
     LLM_INVALID_OUTPUT = "LLM_INVALID_OUTPUT"
     #: No model provider is configured, or the feature is switched off.
     LLM_UNAVAILABLE = "LLM_UNAVAILABLE"
+    #: The provider account has no credit or has exhausted its quota. A
+    #: billing problem, not a transient one -- deliberately not retryable.
+    PROVIDER_QUOTA_EXHAUSTED = "PROVIDER_QUOTA_EXHAUSTED"
 
     # --- transport / infra ----------------------------------------------
     UNAUTHORIZED = "UNAUTHORIZED"

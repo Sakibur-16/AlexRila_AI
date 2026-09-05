@@ -21,7 +21,7 @@ os.environ.setdefault("FIXTURE_OCR_DIR", str(FIXTURE_ROOT))
 os.environ.setdefault("LOG_LEVEL", "CRITICAL")
 os.environ.setdefault("LLM_ENABLED", "false")
 
-from app.core.config import Settings, get_settings, reset_settings_cache  # noqa: E402
+from app.core.config import Settings, reset_settings_cache  # noqa: E402
 from app.core.metrics import InMemoryMetricsSink, set_metrics_sink  # noqa: E402
 from app.ocr.factory import create_ocr_provider, reset_provider_cache  # noqa: E402
 from app.pipeline.receipt_pipeline import ReceiptPipeline  # noqa: E402
@@ -46,8 +46,14 @@ def _isolate_caches():
 
 @pytest.fixture
 def settings() -> Settings:
-    """Default test settings."""
-    return get_settings()
+    """Default test settings, isolated from any local ``.env``."""
+    return Settings(
+        _env_file=None,
+        app_env="test",
+        ocr_provider="fixture",
+        fixture_ocr_dir=str(FIXTURE_ROOT),
+        log_level="CRITICAL",
+    )
 
 
 @pytest.fixture
@@ -66,7 +72,9 @@ def make_settings():
             "log_level": "CRITICAL",
         }
         base.update(overrides)
-        return Settings(**base)  # type: ignore[arg-type]
+        # _env_file=None keeps the suite hermetic: a developer's .env must
+        # never change what CI asserts.
+        return Settings(_env_file=None, **base)  # type: ignore[arg-type]
 
     return _make
 
