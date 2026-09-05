@@ -60,6 +60,10 @@ golden: ## Regenerate golden expectations (review the diff before committing)
 golden-check: ## Fail if golden output drifted
 	$(PYTHON) scripts/generate_golden.py --check
 
+.PHONY: check-llm
+check-llm: ## Verify LLM_MODEL / VISION_MODEL exist on the provider
+	$(PYTHON) scripts/check_llm.py
+
 .PHONY: contract
 contract: ## Export openapi.json + sample responses for backend handover
 	$(PYTHON) scripts/export_openapi.py

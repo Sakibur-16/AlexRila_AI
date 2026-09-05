@@ -68,9 +68,11 @@ class Settings(BaseSettings):
     fixture_ocr_dir: str = "tests/fixtures"
 
     # --- vision-model OCR (OCR_PROVIDER=openai_vision) -------------------
-    #: Multimodal model used to transcribe receipts. Model names move; this
-    #: is configuration rather than a constant for that reason.
-    vision_model: str = "gpt-4o-mini"
+    #: Multimodal model used to transcribe receipts. Model names move faster
+    #: than code does, which is why this is configuration and not a constant.
+    #: Verify the current name with `python scripts/check_llm.py` before a
+    #: deploy; a retired name fails at the first request, not at startup.
+    vision_model: str = "gpt-5.1-mini"
     #: Override for an OpenAI-compatible gateway or a self-hosted endpoint.
     #: Empty means the OpenAI API.
     vision_base_url: str = ""
