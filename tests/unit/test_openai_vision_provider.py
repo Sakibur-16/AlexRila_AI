@@ -240,3 +240,42 @@ def test_downstream_validation_still_catches_a_hallucinated_total(
 
     assert "TOTAL_MISMATCH" in result.codes()
     assert not result.is_valid
+
+
+# --------------------------------------------------- retired / wrong model
+def test_unknown_model_names_itself_and_the_fix(configured, image) -> None:
+    """Model names change on the provider's schedule, so this failure is likely.
+
+    A bare "HTTP 404" would send the reader hunting through logs; the message
+    has to name the configured model and how to find a valid one.
+    """
+    body = {"error": {"message": "The model `stub-vision` does not exist"}}
+    client = _StubClient(_StubResponse(404, body))
+
+    with pytest.raises(ProviderUnavailableError) as exc:
+        _provider(configured, client).extract(OCRRequest(image=image))
+
+    message = exc.value.message
+    assert "stub-vision" in message, "must name the model that failed"
+    assert "check_llm" in message, "must point at how to find a valid one"
+    assert exc.value.details["configured_model"] == "stub-vision"
+    # Retryable so a transient provider blip is not treated as fatal config.
+    assert exc.value.retryable
+
+
+def test_no_access_to_a_model_is_treated_the_same(configured, image) -> None:
+    body = {"error": {"message": "You do not have access to model gpt-x"}}
+    client = _StubClient(_StubResponse(403, body))
+    # 403 is not in the model-error branch, so this stays a generic failure.
+    with pytest.raises(OCRError):
+        _provider(configured, client).extract(OCRRequest(image=image))
+
+
+def test_other_400s_are_not_misreported_as_a_model_problem(configured, image) -> None:
+    """A malformed request must not be blamed on the model name."""
+    body = {"error": {"message": "Invalid value for 'temperature'"}}
+    client = _StubClient(_StubResponse(400, body))
+
+    with pytest.raises(OCRError) as exc:
+        _provider(configured, client).extract(OCRRequest(image=image))
+    assert "not available to this API key" not in exc.value.message

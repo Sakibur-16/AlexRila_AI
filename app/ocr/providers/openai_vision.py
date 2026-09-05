@@ -79,6 +79,26 @@ _JPEG_QUALITY = 92
 _MAX_EDGE = 1600
 
 
+def _is_model_error(response: Any) -> bool:
+    """Whether a 4xx names the model as the problem.
+
+    Read from the provider's own error payload rather than guessed at from the
+    status code, since 400 and 404 both cover several unrelated causes.
+    """
+    try:
+        message = response.json().get("error", {}).get("message", "")
+    except (ValueError, AttributeError):
+        return False
+    lowered = str(message).lower()
+    return "model" in lowered and (
+        "does not exist" in lowered
+        or "not found" in lowered
+        or "do not have access" in lowered
+        or "unsupported" in lowered
+        or "deprecated" in lowered
+    )
+
+
 @register_provider("openai_vision")
 class OpenAIVisionOCRProvider(OCRProvider):
     """Reads receipts with a multimodal model over an OpenAI-compatible API."""
@@ -214,6 +234,22 @@ class OpenAIVisionOCRProvider(OCRProvider):
             raise ProviderUnavailableError(
                 "Vision model rate limit reached.",
                 details={"provider": self.name, "status_code": 429},
+            )
+
+        # A retired or mistyped model name lands here, and a bare "HTTP 404"
+        # sends the reader hunting through logs. Model names change on the
+        # provider's schedule, not ours, so this failure is likely and the
+        # message has to name both the cause and the fix.
+        if response.status_code in (400, 404) and _is_model_error(response):
+            raise ProviderUnavailableError(
+                f"The vision model {model!r} is not available to this API key. "
+                "Model names change over time -- run `python scripts/check_llm.py "
+                "--list` to see what this key can use, then set VISION_MODEL.",
+                details={
+                    "provider": self.name,
+                    "configured_model": model,
+                    "status_code": response.status_code,
+                },
             )
         if response.status_code >= 400:
             # The body can echo request content; only the status is surfaced.
