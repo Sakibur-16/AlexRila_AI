@@ -16,6 +16,7 @@ thread-safe for :meth:`~app.ocr.base.OCRProvider.extract`.
 
 from __future__ import annotations
 
+import hashlib
 import threading
 from collections.abc import Callable
 from typing import TypeVar
@@ -106,7 +107,16 @@ def create_ocr_provider(name: str | None = None, settings: Settings | None = Non
 
 
 def _config_signature(settings: Settings) -> tuple[str, ...]:
-    """Settings that, when changed, must produce a fresh provider instance."""
+    """Settings that, when changed, must produce a fresh provider instance.
+
+    Every provider-affecting setting belongs here. Omitting one means a cached
+    instance built from stale configuration is silently handed back -- which
+    looked exactly like "the API key I just set is being ignored".
+
+    The API key is hashed rather than stored: this tuple is a cache key held
+    for the process lifetime, and a secret has no business living in one.
+    """
+    vision_key = settings.vision_api_key.get_secret_value()
     return (
         ",".join(settings.ocr_languages),
         settings.tesseract_cmd,
@@ -114,6 +124,9 @@ def _config_signature(settings: Settings) -> tuple[str, ...]:
         str(settings.tesseract_psm),
         str(settings.tesseract_oem),
         settings.fixture_ocr_dir,
+        settings.vision_model,
+        settings.vision_base_url,
+        hashlib.sha256(vision_key.encode()).hexdigest() if vision_key else "",
     )
 
 

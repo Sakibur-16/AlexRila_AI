@@ -22,7 +22,7 @@ from app.api.dependencies import (
     sanitize_request_id,
 )
 from app.api.errors import register_error_handlers
-from app.api.routes import health, receipts
+from app.api.routes import health, receipts, reviews
 from app.api.security import RequireAPIKey
 from app.core.config import Settings, get_settings
 from app.core.logging import (
@@ -156,6 +156,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(health.router)
     # Versioned endpoints require the API key when one is configured.
     app.include_router(receipts.router, prefix=API_PREFIX, dependencies=[RequireAPIKey])
+    app.include_router(reviews.router, prefix=API_PREFIX, dependencies=[RequireAPIKey])
 
     return app
 

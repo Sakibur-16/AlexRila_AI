@@ -7,6 +7,6 @@ Adding a provider means adding a module here and importing it below -- see
 
 from __future__ import annotations
 
-from app.ocr.providers import fixture, tesseract
+from app.ocr.providers import fixture, openai_vision, tesseract
 
-__all__ = ["fixture", "tesseract"]
+__all__ = ["fixture", "openai_vision", "tesseract"]

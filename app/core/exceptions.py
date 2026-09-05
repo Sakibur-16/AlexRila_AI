@@ -42,6 +42,8 @@ class ErrorCode(enum.StrEnum):
     LLM_FAILED = "LLM_FAILED"
     LLM_TIMEOUT = "LLM_TIMEOUT"
     LLM_INVALID_OUTPUT = "LLM_INVALID_OUTPUT"
+    #: No model provider is configured, or the feature is switched off.
+    LLM_UNAVAILABLE = "LLM_UNAVAILABLE"
 
     # --- transport / infra ----------------------------------------------
     UNAUTHORIZED = "UNAUTHORIZED"

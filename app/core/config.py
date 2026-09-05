@@ -67,6 +67,16 @@ class Settings(BaseSettings):
     #: Directory of recorded OCR payloads used by the "fixture" provider.
     fixture_ocr_dir: str = "tests/fixtures"
 
+    # --- vision-model OCR (OCR_PROVIDER=openai_vision) -------------------
+    #: Multimodal model used to transcribe receipts. Model names move; this
+    #: is configuration rather than a constant for that reason.
+    vision_model: str = "gpt-4o-mini"
+    #: Override for an OpenAI-compatible gateway or a self-hosted endpoint.
+    #: Empty means the OpenAI API.
+    vision_base_url: str = ""
+    vision_api_key: SecretStr = SecretStr("")
+    vision_max_output_tokens: Annotated[int, Field(ge=256, le=16_000)] = 4096
+
     # -------------------------------------------------------------- uploads
     max_file_size_mb: Annotated[float, Field(gt=0, le=100)] = 10.0
     min_image_width: Annotated[int, Field(ge=1)] = 200
@@ -146,6 +156,13 @@ class Settings(BaseSettings):
     llm_fallback_confidence_threshold: Annotated[float, Field(ge=0, le=1)] = 0.75
     #: Truncate OCR text sent to the LLM, bounding cost and injection surface.
     llm_max_input_chars: Annotated[int, Field(ge=500, le=100_000)] = 20_000
+
+    # ---------------------------------------------------- review generation
+    #: Reviews read as prose, so a little sampling variety helps. Extraction
+    #: stays at 0 -- there the goal is reproducibility, not readability.
+    review_enabled: bool = True
+    review_temperature: Annotated[float, Field(ge=0, le=2)] = 0.7
+    review_max_output_tokens: Annotated[int, Field(ge=128, le=8_000)] = 1024
 
     # -------------------------------------------------------------- privacy
     #: Include full OCR text in the API response.
