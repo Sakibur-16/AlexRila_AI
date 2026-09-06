@@ -91,7 +91,23 @@ def create_ocr_provider(name: str | None = None, settings: Settings | None = Non
         cached = _instances.get(cache_key)
         if cached is not None:
             return cached
+
+    if "+" in key:
+        from app.ocr.providers.fallback import FallbackOCRProvider
+
+        parts = [part.strip() for part in key.split("+") if part.strip()]
+        if len(parts) >= 2:
+            primary = create_ocr_provider(parts[0], settings)
+            secondary = create_ocr_provider(parts[1], settings)
+            provider = FallbackOCRProvider(primary, secondary)
+            with _lock:
+                _instances[cache_key] = provider
+            logger.info("ocr_provider_created", provider=key)
+            return provider
+
+    with _lock:
         factory = _registry.get(key)
+
 
     if factory is None:
         raise ProviderNotRegisteredError(

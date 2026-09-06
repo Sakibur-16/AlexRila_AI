@@ -355,3 +355,14 @@ def test_engine_timeout_is_retryable(monkeypatch, settings) -> None:
     with pytest.raises(OCRTimeoutError) as exc:
         provider.extract(OCRRequest(image=np.zeros((10, 10), np.uint8)))
     assert exc.value.retryable
+
+
+def test_create_fallback_provider_chain(settings) -> None:
+    """create_ocr_provider('openai_vision+tesseract') creates a FallbackOCRProvider."""
+    from app.ocr.factory import create_ocr_provider
+    from app.ocr.providers.fallback import FallbackOCRProvider
+
+    provider = create_ocr_provider("openai_vision+tesseract", settings)
+    assert isinstance(provider, FallbackOCRProvider)
+    assert provider.name == "openai_vision+tesseract"
+
