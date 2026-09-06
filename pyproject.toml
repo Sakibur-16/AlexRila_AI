@@ -30,6 +30,8 @@ dependencies = [
     "tenacity>=8.2",
     # HTTP client for cloud OCR / LLM providers.
     "httpx>=0.27",
+    # Keep compatibility with starlette.testclient used by integration tests.
+    "anyio<4.15",
 ]
 
 [project.optional-dependencies]
