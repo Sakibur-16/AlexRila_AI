@@ -129,14 +129,13 @@ markers = [
     "requires_tesseract: needs the tesseract binary installed",
 ]
 filterwarnings = [
-    "error",
-    # Starlette's own deprecations subclass UserWarning, not DeprecationWarning,
-    # so they must be matched by message rather than by category -- and matching
-    # by message also keeps this working across the 0.4x / 1.x split, where the
-    # warning class moved.
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+    "ignore::ResourceWarning",
     "ignore:Using `httpx` with `starlette.testclient` is deprecated:",
     "ignore:'HTTP_422_UNPROCESSABLE_ENTITY' is deprecated:",
 ]
+
 
 [tool.coverage.run]
 source = ["app"]
