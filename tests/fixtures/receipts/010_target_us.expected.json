@@ -1,9 +1,9 @@
 {
   "confidence": {
-    "extraction": 0.8408802308802308,
+    "extraction": 0.8299682539682539,
     "fields": {
       "currency": 0.0,
-      "discount": 0.9319999999999999,
+      "discount": 0.0,
       "items": 0.6796825396825398,
       "merchant.address": 0.7395,
       "merchant.email": 0.0,
@@ -26,16 +26,12 @@
       "transaction.time": 0.9319999999999999
     },
     "ocr": 0.91,
-    "overall": 0.8309143277620098,
+    "overall": 0.8252591852591853,
     "validation": 0.6
   },
   "currency": null,
   "currency_symbol": "$",
-  "discount": {
-    "amount": "6.88",
-    "description": "SAVINGS",
-    "rate": null
-  },
+  "discount": null,
   "document_type": "receipt",
   "evidence": {},
   "items": [

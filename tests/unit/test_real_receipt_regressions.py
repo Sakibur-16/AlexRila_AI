@@ -156,8 +156,12 @@ def test_informational_savings_does_not_break_the_total_identity(
     result = ValidationEngine(settings).validate(extraction, ocr=ocr)
 
     assert "TOTAL_MISMATCH" not in result.codes()
-    # The discount is still reported -- it is real information.
-    assert extraction.discount.value is not None
+    # "TOTAL SAVINGS THIS TRIP" is a footer summary of what was saved across
+    # the visit, not a deduction from the subtotal -- the reductions are
+    # already in the prices above. Counting it as a receipt-level discount is
+    # what produced a 131.51 discount against a 1.98 subtotal on a real CVS
+    # receipt, so it is deliberately not reported as one.
+    assert extraction.discount.value is None
 
 
 def test_genuine_deducted_discount_still_validates(settings, ocr_result_factory) -> None:

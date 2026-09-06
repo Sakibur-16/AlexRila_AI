@@ -98,12 +98,23 @@ class LineView:
     def offsets_aligned(self) -> bool:
         """Whether ``keyword_text`` offsets are valid in ``normalized``.
 
-        The keyword view is built with length-preserving substitutions, so the
-        two normally align character for character. The one exception is the
-        collapse of letter-spaced headings ("T O T A L"), which shortens the
-        string -- and that only happens on lines carrying no amounts.
+        Both views are built from the same cleaned line by length-preserving
+        substitutions, so positions correspond. Two things can shorten the
+        keyword view, and only one of them breaks alignment:
+
+        * **Trailing strip.** Punctuation becomes whitespace and is then
+          trimmed, so "1 MFR COUPON 2.00 -" loses its tail. Earlier offsets are
+          untouched, so a label span remains valid. Requiring exact equality
+          rejected these lines and sent them to the keyword view, where the
+          decimal point had become a space -- "2.00" read as "2 00", and the
+          coupon was extracted as 0.
+        * **Letter-space collapse.** "T O T A L" becomes "TOTAL", which shifts
+          every later position. It only fires on an all-letter line, so the
+          presence of any parsed amount rules it out.
         """
-        return len(self.keyword_text) == len(self.normalized)
+        if len(self.keyword_text) > len(self.normalized):
+            return False
+        return bool(self.amounts) or len(self.keyword_text) == len(self.normalized)
 
     def text_after(self, label: LabelMatch) -> str:
         """Text following ``label``, bounded by the next label on the line.

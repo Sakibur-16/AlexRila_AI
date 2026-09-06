@@ -82,13 +82,49 @@ _NON_ITEM = re.compile(
     re.IGNORECASE,
 )
 
+#: Register/transaction metadata. These lines are dense with long numbers, so
+#: without an explicit exclusion they parse as an item with an absurd price:
+#: "REG#03 TRN#7524 CSHR#1416938 STR#6855" became a 6855.00 purchase, and an
+#: ExtraCare card number became a 7080.00 one.
+_METADATA_LINE = re.compile(
+    r"\b(?:REG\s*#|TRN\s*#|CSHR\s*#|STR\s*#|TILL\s*#|LANE\s*#|POS\s*#"
+    r"|EXTRACARE|LOYALTY|MEMBER(?:SHIP)?\s*(?:#|NO|CARD)|REWARDS?\s*(?:#|CARD)"
+    r"|CARD\s*#|ACCOUNT\s*#|HELPED\s+BY|SERVED\s+BY|CASHIER|OPERATOR"
+    r"|TRIP\s+SUMMARY|RETURNS?\s+WITH|SAVINGS\s+VALUE|TODAY\s+YOU\s+SAVED)\b",
+    re.IGNORECASE,
+)
+
+#: Coupon and manufacturer-discount rows. Real reductions, but not purchases:
+#: counting them as items double-books the receipt.
+_COUPON_LINE = re.compile(
+    r"\b(?:MFR\s+COUPON|CVS\s+COUPON|COUPON|VOUCHER|REBATE)\b",
+    re.IGNORECASE,
+)
+
+#: A trailing saving printed on the item line itself: "SAVED .50",
+#: "SAVED 50% 3.00", "YOU SAVE 1.97". The amount belongs to the discount, not
+#: to the price, and taking the rightmost number would otherwise read it as
+#: the line total.
+_SAVED_SUFFIX = re.compile(
+    r"\b(?:SAVED|YOU\s+SAVE|SAVINGS?)\b"
+    r"(?:\s*\d{1,2}(?:[.,]\d{1,2})?\s*%)?"  # optional "50%" before the amount
+    r"\s*([\d.,]+)?\s*\S{0,4}\s*$",
+    re.IGNORECASE,
+)
+
 #: Promotional annotations printed beneath an item. They carry a price but
 #: describe the item above rather than a purchase of their own, so counting
 #: them double-bills the receipt.
 _ANNOTATION = re.compile(
-    r"^\s*(?:REGULAR\s+PRICE|REG\.?\s+PRICE|WAS\b|YOU\s+(?:SAVE|PAY)|SAVE\b"
+    r"^\s*(?:"
+    r"REGULAR\s+PRICE|REG\.?\s+PRICE|WAS\b|YOU\s+(?:SAVE|PAY)|SAVE\b"
     r"|MSRP|LIST\s+PRICE|ORIG(?:INAL)?\.?\s+PRICE|MEMBER\s+PRICE|PRICE\s+EACH"
-    r"|\d+\s*@\s*\S+\s*(?:EA|EACH)?\s*$)",
+    r"|\d+\s*@\s*\S+\s*(?:EA|EACH)?\s*$"
+    # "4.49 EACH OR 3/ 12.00" -- a unit-price note under the item above.
+    r"|[\d.,]+\s+EACH\b"
+    # "BUY 1, GET 1 FOR 50% OFF" -- a promotion, not a purchase.
+    r"|BUY\s*\d*\s*,?\s*GET\b"
+    r")",
     re.IGNORECASE,
 )
 
@@ -219,6 +255,8 @@ def _is_structural(line: LineView) -> bool:
         return True
     if _NON_ITEM.match(line.normalized) or _ANNOTATION.match(line.normalized):
         return True
+    if _METADATA_LINE.search(line.normalized) or _COUPON_LINE.search(line.normalized):
+        return True
     return line.has(*_DISQUALIFYING)
 
 
@@ -251,6 +289,14 @@ def _parse_item_line(
     # fragments behind.
     working = text
     sku: str | None = None
+    saved: Decimal | None = None
+
+    # Take the saving off the end before any price is read, so the rightmost
+    # remaining amount is the actual line total.
+    saved_match = _SAVED_SUFFIX.search(working)
+    if saved_match is not None:
+        saved = _to_decimal(saved_match.group(1)) if saved_match.group(1) else None
+        working = _blank(working, saved_match.span())
 
     # Strip a leading product code before anything else reads it as money.
     code = _LEADING_PRODUCT_CODE.match(working)
@@ -302,7 +348,13 @@ def _parse_item_line(
 
     total_price: Decimal | None = prices[-1].value
     if unit_price is None and len(prices) >= 2:
-        unit_price = prices[-2].value
+        # Only a figure carrying cents is a candidate unit price. A bare
+        # integer in that position is a size or pack code -- "12Z" read as
+        # "122", "128S" read as "1285" -- and taking it would price a 4.49
+        # item at 122.00.
+        unit_candidate = prices[-2]
+        if "." in unit_candidate.raw or "," in unit_candidate.raw:
+            unit_price = unit_candidate.value
 
     description = _extract_description(working, prices)
     if description is None or len(description) < _MIN_DESCRIPTION_LENGTH:
@@ -310,6 +362,16 @@ def _parse_item_line(
 
     if quantity is not None and (quantity <= 0 or quantity > _MAX_PLAUSIBLE_QUANTITY):
         quantity = None
+
+    # A unit price far above the line total is an identifier that slipped
+    # through, not a price.
+    if (
+        unit_price is not None
+        and total_price is not None
+        and total_price > 0
+        and unit_price > total_price * _MAX_UNIT_PRICE_RATIO
+    ):
+        unit_price = None
 
     # A "unit price" equal to the line total is not a separate figure, it is
     # the same number read twice from a single-quantity row.
@@ -331,8 +393,8 @@ def _parse_item_line(
     if total_price is None:
         return None
 
-    discount = None
-    if _ITEM_DISCOUNT.search(text) and total_price < 0:
+    discount = saved
+    if discount is None and _ITEM_DISCOUNT.search(text) and total_price < 0:
         discount = abs(total_price)
 
     evidence = line.evidence(method, notes=f"prices={len(prices)}")

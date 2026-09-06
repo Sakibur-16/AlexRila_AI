@@ -68,6 +68,16 @@ _MASKED_TAIL = re.compile(
     r"|(?<![\w*])\*(\d{4})(?!\d)"
 )
 
+#: Loyalty, membership and rewards lines. They carry a masked number and the
+#: word "card", so without an explicit exclusion they are indistinguishable
+#: from a payment card -- and a store loyalty number reported as card_last4
+#: is worse than no value at all.
+_LOYALTY_LINE = re.compile(
+    r"\b(?:EXTRACARE|LOYALTY|REWARDS?|MEMBER(?:SHIP)?|CLUB|POINTS?|ADVANTAGE"
+    r"|BONUS\s*CARD|STORE\s*CARD|GIFT\s*CARD\s*BALANCE)\b",
+    re.IGNORECASE,
+)
+
 #: Permitted discrepancy when checking that split amounts sum to the total.
 _SPLIT_TOLERANCE = Decimal("0.05")
 
@@ -142,6 +152,8 @@ def _payment_lines(context: ReceiptContext) -> list[LineView]:
 def _extract_method(lines: list[LineView]) -> ExtractedField[PaymentMethod]:
     """Identify the payment instrument."""
     for line in lines:
+        if _LOYALTY_LINE.search(line.normalized):
+            continue
         for pattern, method in _METHOD_PATTERNS:
             if pattern.search(line.normalized):
                 return ExtractedField(
@@ -159,6 +171,8 @@ def _extract_method(lines: list[LineView]) -> ExtractedField[PaymentMethod]:
 def _extract_card_last4(lines: list[LineView]) -> ExtractedField[str]:
     """Extract the last four digits of the card used, if printed."""
     for line in lines:
+        if _LOYALTY_LINE.search(line.normalized):
+            continue
         match = _MASKED_TAIL.search(line.normalized)
         if match:
             digits = match.group(1) or match.group(2) or match.group(3)
@@ -197,7 +211,7 @@ def _extract_splits(lines: list[LineView], total: Decimal | None) -> tuple[Payme
     seen: set[PaymentMethod] = set()
 
     for line in lines:
-        if line.has(LabelCategory.CHANGE):
+        if line.has(LabelCategory.CHANGE) or _LOYALTY_LINE.search(line.normalized):
             continue
         monetary = [amount for amount in line.amounts if "." in amount.raw or "," in amount.raw]
         if not monetary:

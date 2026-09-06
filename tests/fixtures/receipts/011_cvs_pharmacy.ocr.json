@@ -1,0 +1,149 @@
+{
+  "text": "CVS/pharmacy'\n17165 BLUEMOUND RD\nBROOKFIELD, WI 53226\n262.797.9074\nREG#O3 TRN#7524 CSHR#1416938 STR#6855\nHelped by: ALEXANDER\nExtraCare Card #: «xx«*%#*7080\n1 PNTNE PRO-V DMR CD 122 4.49 SAVED 50\n4.49 EACH OR 3/ 12.00\n1 PNINE D MST RN SH 12.6 4.497 SAVED R-\n4.49 EACH OR 3/ 12.00\n1 PNTINE D MST RN SH 126 3.02T SAVED 1.97\n4.49 EACH RW 12.0\n1 CPH AD EX STGTH 1P.5.12 5.99T\n1 CPH AD EX STGTH IP 5.12 2.99T SAVED 50x 3.00\nBUY 1, GET 1 FOR 50x OFF\n1 JTB PTW 128/SNG 1285 1.777\n1 MER COUPON 5.00 -\n1 MFR COUPON 1.00 -\n1 MFR COUPON 1.00 -\n1 CVS MFR COUPON 10.00 - MFR COUPON\n1 $2 OFF PAPER TOWEL 1.77 - CVS COUPON\n1 COUPON 2.00 -\n6 ITEMS\nSUBTOTAL 1.98\nWI 5.1% TAX 1.07\nTOTAL 3.6\nCASH 5.00\nCHANGE 1.6\n2506 8557 1487 5240 36\nRETURNS WITH RECEIPT THRU 07/27/2017\nMAY 28, 2017 9:41 AM\nTRIP SUMMARY:\nToday You Saved 26.74\nSavings Value 93%",
+  "lines": [
+    {
+      "text": "CVS/pharmacy'",
+      "confidence": 0.81
+    },
+    {
+      "text": "17165 BLUEMOUND RD",
+      "confidence": 0.81
+    },
+    {
+      "text": "BROOKFIELD, WI 53226",
+      "confidence": 0.81
+    },
+    {
+      "text": "262.797.9074",
+      "confidence": 0.81
+    },
+    {
+      "text": "REG#O3 TRN#7524 CSHR#1416938 STR#6855",
+      "confidence": 0.81
+    },
+    {
+      "text": "Helped by: ALEXANDER",
+      "confidence": 0.81
+    },
+    {
+      "text": "ExtraCare Card #: «xx«*%#*7080",
+      "confidence": 0.81
+    },
+    {
+      "text": "1 PNTNE PRO-V DMR CD 122 4.49 SAVED 50",
+      "confidence": 0.81
+    },
+    {
+      "text": "4.49 EACH OR 3/ 12.00",
+      "confidence": 0.81
+    },
+    {
+      "text": "1 PNINE D MST RN SH 12.6 4.497 SAVED R-",
+      "confidence": 0.81
+    },
+    {
+      "text": "4.49 EACH OR 3/ 12.00",
+      "confidence": 0.81
+    },
+    {
+      "text": "1 PNTINE D MST RN SH 126 3.02T SAVED 1.97",
+      "confidence": 0.81
+    },
+    {
+      "text": "4.49 EACH RW 12.0",
+      "confidence": 0.81
+    },
+    {
+      "text": "1 CPH AD EX STGTH 1P.5.12 5.99T",
+      "confidence": 0.81
+    },
+    {
+      "text": "1 CPH AD EX STGTH IP 5.12 2.99T SAVED 50x 3.00",
+      "confidence": 0.81
+    },
+    {
+      "text": "BUY 1, GET 1 FOR 50x OFF",
+      "confidence": 0.81
+    },
+    {
+      "text": "1 JTB PTW 128/SNG 1285 1.777",
+      "confidence": 0.81
+    },
+    {
+      "text": "1 MER COUPON 5.00 -",
+      "confidence": 0.81
+    },
+    {
+      "text": "1 MFR COUPON 1.00 -",
+      "confidence": 0.81
+    },
+    {
+      "text": "1 MFR COUPON 1.00 -",
+      "confidence": 0.81
+    },
+    {
+      "text": "1 CVS MFR COUPON 10.00 - MFR COUPON",
+      "confidence": 0.81
+    },
+    {
+      "text": "1 $2 OFF PAPER TOWEL 1.77 - CVS COUPON",
+      "confidence": 0.81
+    },
+    {
+      "text": "1 COUPON 2.00 -",
+      "confidence": 0.81
+    },
+    {
+      "text": "6 ITEMS",
+      "confidence": 0.81
+    },
+    {
+      "text": "SUBTOTAL 1.98",
+      "confidence": 0.81
+    },
+    {
+      "text": "WI 5.1% TAX 1.07",
+      "confidence": 0.81
+    },
+    {
+      "text": "TOTAL 3.6",
+      "confidence": 0.81
+    },
+    {
+      "text": "CASH 5.00",
+      "confidence": 0.81
+    },
+    {
+      "text": "CHANGE 1.6",
+      "confidence": 0.81
+    },
+    {
+      "text": "2506 8557 1487 5240 36",
+      "confidence": 0.81
+    },
+    {
+      "text": "RETURNS WITH RECEIPT THRU 07/27/2017",
+      "confidence": 0.81
+    },
+    {
+      "text": "MAY 28, 2017 9:41 AM",
+      "confidence": 0.81
+    },
+    {
+      "text": "TRIP SUMMARY:",
+      "confidence": 0.81
+    },
+    {
+      "text": "Today You Saved 26.74",
+      "confidence": 0.81
+    },
+    {
+      "text": "Savings Value 93%",
+      "confidence": 0.81
+    }
+  ],
+  "languages": [
+    "eng"
+  ],
+  "source": "recorded-from-tesseract-5.4-real-cvs-receipt"
+}

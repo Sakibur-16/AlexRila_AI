@@ -128,6 +128,11 @@ def _expand_year(year: int) -> int:
 
 def _build(year: int, month: int, day: int, raw: str) -> ParsedDate:
     """Construct a validated date, reporting rather than raising on failure."""
+    if year == 0:
+        # "3/ 12.00" is the tail of a price, not a date in the year 2000. A
+        # receipt from 1900 or 2000 is not a case worth supporting, and
+        # accepting one turns every "OR 3/ 12.00" line into a transaction date.
+        return ParsedDate(value=None, raw=raw, warnings=("INVALID_DATE",))
     year = _expand_year(year)
     try:
         value = date(year, month, day)

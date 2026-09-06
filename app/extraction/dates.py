@@ -23,6 +23,13 @@ from app.extraction.lexicon import LabelCategory
 from app.normalization import dates as date_norm
 from app.schemas.receipt import ReceiptSection
 
+#: Any month name or three-letter abbreviation. A date containing one is
+#: unambiguous, which is what lets it outrank a numeric candidate.
+_MONTH_NAME = re.compile(
+    r"\b(?:JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[A-Z]*\b",
+    re.IGNORECASE,
+)
+
 #: Contexts in which a date is *not* the transaction date.
 _DISQUALIFYING_CONTEXT = re.compile(
     r"\b(EXP|EXPIRY|EXPIRES|VALID\s*(?:UNTIL|THRU|TILL)|RETURN\s*BY|BEST\s*BEFORE"
@@ -79,6 +86,14 @@ def _candidate_lines(context: ReceiptContext) -> list[LineView]:
 def _extract_date(context: ReceiptContext) -> ExtractedField[date_type]:
     """Find the transaction date."""
     date_order = context.settings.date_order
+
+    # A month-name date cannot be mistaken for a price, so it outranks every
+    # numeric candidate regardless of where it appears. Receipts often print
+    # it in the footer, well below price lines that are date-shaped.
+    textual = _extract_textual_date(context)
+    if textual is not None:
+        return textual
+
     ambiguous_fallback: ExtractedField[date_type] | None = None
 
     for line in _candidate_lines(context):
@@ -138,3 +153,27 @@ def _extract_time(context: ReceiptContext) -> ExtractedField[time_type]:
         )
 
     return ExtractedField.absent()
+
+
+def _extract_textual_date(context: ReceiptContext) -> ExtractedField[date_type] | None:
+    """Find a date written with a month name, anywhere in the document.
+
+    Returns ``None`` when there is none, leaving the numeric scan to run.
+    """
+    for line in context.lines:
+        if _DISQUALIFYING_CONTEXT.search(line.normalized):
+            continue
+        if not _MONTH_NAME.search(line.normalized):
+            continue
+        parsed = date_norm.parse_date(line.normalized, date_order="none")
+        if parsed is None or parsed.value is None:
+            continue
+        label = line.label_of(LabelCategory.DATE)
+        method = ExtractionMethod.KEYWORD_ANCHORED if label is not None else ExtractionMethod.REGEX
+        return ExtractedField(
+            value=parsed.value,
+            evidence=(line.evidence(method, notes=f"month_name raw={parsed.raw}"),),
+            raw_value=parsed.raw,
+            warnings=parsed.warnings,
+        )
+    return None

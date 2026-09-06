@@ -20,7 +20,7 @@ from decimal import Decimal
 
 from app.domain.evidence import ExtractedField, ExtractionMethod
 from app.extraction.context import LineView, ReceiptContext
-from app.extraction.lexicon import LabelCategory
+from app.extraction.lexicon import LabelCategory, LabelMatch
 from app.normalization.money import parse_percentage
 from app.schemas.receipt import Discount, ReceiptSection, Tax, TaxDetail
 
@@ -205,6 +205,16 @@ def _fallback_total_from_bottom(context: ReceiptContext) -> ExtractedField[Decim
     return ExtractedField.absent()
 
 
+#: Footer savings summaries. They report what was saved across the whole trip
+#: and are informational: the reductions are already reflected in the prices
+#: above. Summing them into the discount produced a figure many times the
+#: subtotal.
+_SAVINGS_SUMMARY = re.compile(
+    r"\b(?:TODAY\s+YOU\s+SAVED|YOU\s+SAVED\s+TODAY|TOTAL\s+SAVINGS"
+    r"|SAVINGS\s+VALUE|TRIP\s+SUMMARY|YOUR\s+SAVINGS)\b",
+    re.IGNORECASE,
+)
+
 #: Qualifiers that turn a TOTAL-vocabulary word into something else entirely.
 #: "BALANCE" is a legitimate total label, but "POINTS BALANCE 9500" is a
 #: loyalty statement -- and being the largest figure on the receipt, it would
@@ -341,6 +351,10 @@ def _extract_discount(context: ReceiptContext) -> ExtractedField[Discount]:
         label = line.label_of(LabelCategory.DISCOUNT)
         if label is None:
             continue
+        if _SAVINGS_SUMMARY.search(line.normalized) or _is_item_level_saving(line, label):
+            # Belongs to the item above it, and the item extractor already
+            # records it. Counting it here as well is double-counting.
+            continue
         found = context.value_for_label(line, label)
         if found is None:
             continue
@@ -366,4 +380,24 @@ def _extract_discount(context: ReceiptContext) -> ExtractedField[Discount]:
                 ExtractionMethod.DERIVED, notes=f"sum_of_{len(collected)}_discount_lines"
             ),
         ),
+    )
+
+
+def _is_item_level_saving(line: LineView, label: LabelMatch) -> bool:
+    """Whether a discount keyword is an annotation on an item line.
+
+    A receipt-level discount leads its line, allowing for a quantity:
+    "DISCOUNT 5.00", "1 MFR COUPON 5.00 -". An item-level one trails the
+    item's own price: "PNTNE PRO-V DMR CD 12Z 4.49T SAVED .50".
+
+    The discriminator is a *monetary* figure before the keyword. A bare
+    integer there is a quantity, and treating it as a price wrongly excluded
+    every coupon row.
+    """
+    if label.start == 0:
+        return False
+    return any(
+        ("." in amount.raw or "," in amount.raw)
+        and 0 <= line.normalized.find(amount.raw) < label.start
+        for amount in line.amounts
     )
