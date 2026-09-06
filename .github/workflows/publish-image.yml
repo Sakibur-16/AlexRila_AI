@@ -84,8 +84,9 @@ jobs:
           echo "--- ready  ---"  && curl -fsS http://localhost:8000/ready
           echo "--- version ---" && curl -fsS http://localhost:8000/version
           # /ready must report the OCR engine as usable inside the image.
-          curl -fsS http://localhost:8000/ready | grep -q '"ready":true'
+          curl -fsS http://localhost:8000/ready | grep -i -E '"ready"\s*:\s*true'
           docker rm -f smoke
+
 
       - name: Summary
         run: |
