@@ -72,8 +72,7 @@ class FallbackOCRProvider(OCRProvider):
                 f"{self._secondary.name}: {primary_detail}"
             )
         return False, (
-            f"{self._primary.name}: {primary_detail} / "
-            f"{self._secondary.name}: {secondary_detail}"
+            f"{self._primary.name}: {primary_detail} / {self._secondary.name}: {secondary_detail}"
         )
 
     def describe(self) -> dict[str, Any]:

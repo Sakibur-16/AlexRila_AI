@@ -365,4 +365,3 @@ def test_create_fallback_provider_chain(settings) -> None:
     provider = create_ocr_provider("openai_vision+tesseract", settings)
     assert isinstance(provider, FallbackOCRProvider)
     assert provider.name == "openai_vision+tesseract"
-
